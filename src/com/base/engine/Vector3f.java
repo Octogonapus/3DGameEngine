@@ -63,10 +63,25 @@ public class Vector3f {
     /**
      * Rotates this vector.
      *
-     * @return      Rotated vector
+     * @return  Rotated vector
      */
-    public Vector3f rotate() {
-        return null;
+    public Vector3f rotate(float angle, Vector3f axis) {
+        float sinHalfAngle = (float)Math.sin(Math.toRadians(angle / 2));
+        float cosHalfAngle = (float)Math.cos(Math.toRadians(angle / 2));
+
+        float rX = axis.getX() * sinHalfAngle;
+        float rY = axis.getY() * sinHalfAngle;
+        float rZ = axis.getZ() * sinHalfAngle;
+        float rW = cosHalfAngle;
+
+        Quaternion rotation = new Quaternion(rX, rY, rZ, rW);
+        Quaternion w = rotation.mul(this).mul(rotation.conjugate());
+
+        x = w.getX();
+        y = w.getY();
+        z = w.getZ();
+
+        return this;
     }
 
     /**
@@ -76,7 +91,7 @@ public class Vector3f {
      * @return  The sum
      */
     public Vector3f add(Vector3f r) {
-        return new Vector3f(x + r.getY(), y + r.getY(), z + r.getZ());
+        return new Vector3f(x + r.getX(), y + r.getY(), z + r.getZ());
     }
 
     /**
@@ -96,7 +111,7 @@ public class Vector3f {
      * @return  The difference
      */
     public Vector3f sub(Vector3f r) {
-        return new Vector3f(x - r.getY(), y - r.getY(), z - r.getZ());
+        return new Vector3f(x - r.getX(), y - r.getY(), z - r.getZ());
     }
 
     /**
@@ -116,7 +131,7 @@ public class Vector3f {
      * @return  The product
      */
     public Vector3f mul(Vector3f r) {
-        return new Vector3f(x * r.getY(), y * r.getY(), z * r.getZ());
+        return new Vector3f(x * r.getX(), y * r.getY(), z * r.getZ());
     }
 
     /**
@@ -136,7 +151,7 @@ public class Vector3f {
      * @return  The quotient
      */
     public Vector3f div(Vector3f r) {
-        return new Vector3f(x / r.getY(), y / r.getY(), z / r.getZ());
+        return new Vector3f(x / r.getX(), y / r.getY(), z / r.getZ());
     }
 
     /**
