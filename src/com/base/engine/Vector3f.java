@@ -1,199 +1,163 @@
 package com.base.engine;
 
-/**
- * @author Octogonapus
- */
-
-public class Vector3f {
-    private float x, y, z;
-
-    public Vector3f(float x, float y, float z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
+public class Vector3f 
+{
+	private float x;
+	private float y;
+	private float z;
+	
+	public Vector3f(float x, float y, float z)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
     /**
-     * Gets the length of the vector.
+     * Get the length of this vector.
      *
-     * @return  The length of the vector
+     * @return  The length of this vector
      */
-    public float length() {
-        return (float) Math.sqrt(x * x + y * y + z * z);
-    }
+	public float length()
+	{
+		return (float)Math.sqrt(x * x + y * y + z * z);
+	}
 
     /**
-     * Computes the dot product of this vector and another vector.
+     * Get the dot product of two vectors
      *
      * @param r The other vector
      * @return  The dot product
      */
-    public float dot(Vector3f r) {
-        return x * r.getX() + y * r.getY() + z * r.getZ();
-    }
+	public float dot(Vector3f r)
+	{
+		return x * r.getX() + y * r.getY() + z * r.getZ();
+	}
 
     /**
-     * Computes the cross product of this vector and another vector.
+     * Get the cross product of two vectors
      *
      * @param r The other vector
      * @return  The cross product
      */
-    public Vector3f cross(Vector3f r) {
-        float x_ = y * r.getZ() - z * r.getY();
-        float y_ = z * r.getX() - x * r.getZ();
-        float z_ = x * r.getY() - y * r.getX();
-
-        return new Vector3f(x_, y_, z_);
-    }
+	public Vector3f cross(Vector3f r)
+	{
+		float x_ = y * r.getZ() - z * r.getY();
+		float y_ = z * r.getX() - x * r.getZ();
+		float z_ = x * r.getY() - y * r.getX();
+		
+		return new Vector3f(x_, y_, z_);
+	}
 
     /**
-     * Normalizes this vector.
+     * Normalize this vector.
      *
      * @return  The normalized vector
      */
-    public Vector3f normalize() {
-        float length = length();
-        x /= length;
-        y /= length;
-        z /= length;
-
-        return this;
-    }
+	public Vector3f normalized()
+	{
+		float length = length();
+		
+		return new Vector3f(x / length, y / length, z / length);
+	}
 
     /**
-     * Rotates this vector.
+     * Rotate this vector.
      *
-     * @return  Rotated vector
+     * @param angle Angle to rotate
+     * @param axis  Axis to rotate around
+     * @return      The rotated vector
      */
-    public Vector3f rotate(float angle, Vector3f axis) {
-        float sinHalfAngle = (float)Math.sin(Math.toRadians(angle / 2));
-        float cosHalfAngle = (float)Math.cos(Math.toRadians(angle / 2));
+	public Vector3f rotate(float angle, Vector3f axis)
+	{
+		float sinHalfAngle = (float)Math.sin(Math.toRadians(angle / 2));
+		float cosHalfAngle = (float)Math.cos(Math.toRadians(angle / 2));
+		
+		float rX = axis.getX() * sinHalfAngle;
+		float rY = axis.getY() * sinHalfAngle;
+		float rZ = axis.getZ() * sinHalfAngle;
+		float rW = cosHalfAngle;
+		
+		Quaternion rotation = new Quaternion(rX, rY, rZ, rW);
+		Quaternion conjugate = rotation.conjugate();
+		
+		Quaternion w = rotation.mul(this).mul(conjugate);
+		
+		return new Vector3f(w.getX(), w.getY(), w.getZ());
+	}
+	
+	public Vector3f add(Vector3f r)
+	{
+		return new Vector3f(x + r.getX(), y + r.getY(), z + r.getZ());
+	}
+	
+	public Vector3f add(float r)
+	{
+		return new Vector3f(x + r, y + r, z + r);
+	}
+	
+	public Vector3f sub(Vector3f r)
+	{
+		return new Vector3f(x - r.getX(), y - r.getY(), z - r.getZ());
+	}
+	
+	public Vector3f sub(float r)
+	{
+		return new Vector3f(x - r, y - r, z - r);
+	}
+	
+	public Vector3f mul(Vector3f r)
+	{
+		return new Vector3f(x * r.getX(), y * r.getY(), z * r.getZ());
+	}
+	
+	public Vector3f mul(float r)
+	{
+		return new Vector3f(x * r, y * r, z * r);
+	}
+	
+	public Vector3f div(Vector3f r)
+	{
+		return new Vector3f(x / r.getX(), y / r.getY(), z / r.getZ());
+	}
+	
+	public Vector3f div(float r)
+	{
+		return new Vector3f(x / r, y / r, z / r);
+	}
+	
+	public Vector3f abs()
+	{
+		return new Vector3f(Math.abs(x), Math.abs(y), Math.abs(z));
+	}
+	
+	public float getX() 
+	{
+		return x;
+	}
 
-        float rX = axis.getX() * sinHalfAngle;
-        float rY = axis.getY() * sinHalfAngle;
-        float rZ = axis.getZ() * sinHalfAngle;
-        float rW = cosHalfAngle;
+	public void setX(float x) 
+	{
+		this.x = x;
+	}
 
-        Quaternion rotation = new Quaternion(rX, rY, rZ, rW);
-        Quaternion w = rotation.mul(this).mul(rotation.conjugate());
+	public float getY() 
+	{
+		return y;
+	}
 
-        x = w.getX();
-        y = w.getY();
-        z = w.getZ();
+	public void setY(float y) 
+	{
+		this.y = y;
+	}
 
-        return this;
-    }
+	public float getZ() 
+	{
+		return z;
+	}
 
-    /**
-     * Adds this vector and another vector.
-     *
-     * @param r The other vector
-     * @return  The sum
-     */
-    public Vector3f add(Vector3f r) {
-        return new Vector3f(x + r.getX(), y + r.getY(), z + r.getZ());
-    }
-
-    /**
-     * Adds a float to this vector.
-     *
-     * @param r The float to add
-     * @return  The sum
-     */
-    public Vector3f add(float r) {
-        return new Vector3f(x + r, y + r, z + r);
-    }
-
-    /**
-     * Subtracts this vector and another vector.
-     *
-     * @param r The other vector
-     * @return  The difference
-     */
-    public Vector3f sub(Vector3f r) {
-        return new Vector3f(x - r.getX(), y - r.getY(), z - r.getZ());
-    }
-
-    /**
-     * Subtracts a float from this vector.
-     *
-     * @param r The float to add
-     * @return  The difference
-     */
-    public Vector3f sub(float r) {
-        return new Vector3f(x - r, y - r, z - r);
-    }
-
-    /**
-     * Multiplies this vector and another vector.
-     *
-     * @param r The other vector
-     * @return  The product
-     */
-    public Vector3f mul(Vector3f r) {
-        return new Vector3f(x * r.getX(), y * r.getY(), z * r.getZ());
-    }
-
-    /**
-     * Multiplies a float by this vector.
-     *
-     * @param r The float to add
-     * @return  The product
-     */
-    public Vector3f mul(float r) {
-        return new Vector3f(x * r, y * r, z * r);
-    }
-
-    /**
-     * Divides this vector and another vector.
-     *
-     * @param r The other vector
-     * @return  The quotient
-     */
-    public Vector3f div(Vector3f r) {
-        return new Vector3f(x / r.getX(), y / r.getY(), z / r.getZ());
-    }
-
-    /**
-     * Divides a float by this vector.
-     *
-     * @param r The float to add
-     * @return  The quotient
-     */
-    public Vector3f div(float r) {
-        return new Vector3f(x / r, y / r, z / r);
-    }
-
-    @Override
-    public String toString() {
-        return "Vector3f{" +
-                "x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                '}';
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getZ() {
-        return z;
-    }
-
-    public void setZ(float z) {
-        this.z = z;
-    }
+	public void setZ(float z) 
+	{
+		this.z = z;
+	}
 }

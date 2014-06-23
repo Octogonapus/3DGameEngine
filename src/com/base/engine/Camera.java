@@ -1,144 +1,160 @@
 package com.base.engine;
 
-import org.lwjgl.input.Keyboard;
+public class Camera
+{
+	public static final Vector3f yAxis = new Vector3f(0,1,0);
+	
+	private Vector3f pos;
+	private Vector3f forward;
+	private Vector3f up;
+	
+	public Camera()
+	{
+		this(new Vector3f(0,0,0), new Vector3f(0,0,1), new Vector3f(0,1,0));
+	}
+	
+	public Camera(Vector3f pos, Vector3f forward, Vector3f up)
+	{
+		this.pos = pos;
+		this.forward = forward.normalized();
+		this.up = up.normalized();
+	}
 
-/**
- * @author Octogonapus
- */
+	boolean mouseLocked = false;
+	Vector2f centerPosition = new Vector2f(Window.getWidth()/2, Window.getHeight()/2);
 
-public class Camera {
-    public static final Vector3f yAxis = new Vector3f(0, 1, 0);
-    private Vector3f pos, forward, up;
+    /**
+     * Takes input and reacts accordingly.
+     */
+	public void input()
+	{
+		float sensitivity = 0.5f;
+		float movAmt = (float)(10 * Time.getDelta());
+		
+		if(Input.getKey(Input.KEY_ESCAPE))
+		{
+			Input.setCursor(true);
+			mouseLocked = false;
+		}
+		if(Input.getMouseDown(0))
+		{
+			Input.setMousePosition(centerPosition);
+			Input.setCursor(false);
+			mouseLocked = true;
+		}
+		
+		if(Input.getKey(Input.KEY_W))
+			move(getForward(), movAmt);
+		if(Input.getKey(Input.KEY_S))
+			move(getForward(), -movAmt);
+		if(Input.getKey(Input.KEY_A))
+			move(getLeft(), movAmt);
+		if(Input.getKey(Input.KEY_D))
+			move(getRight(), movAmt);
+		
+		if(mouseLocked)
+		{
+			Vector2f deltaPos = Input.getMousePosition().sub(centerPosition);
+			
+			boolean rotY = deltaPos.getX() != 0;
+			boolean rotX = deltaPos.getY() != 0;
+			
+			if(rotY)
+				rotateY(deltaPos.getX() * sensitivity);
+			if(rotX)
+				rotateX(-deltaPos.getY() * sensitivity);
+				
+			if(rotY || rotX)
+				Input.setMousePosition(new Vector2f(Window.getWidth()/2, Window.getHeight()/2));
+		}
+	}
 
-    public Camera() {
-        this(new Vector3f(0, 0, 0), new Vector3f(0, 0, 1), new Vector3f(0, 1, 0));
-    }
+    /**
+     * Moves an amount in a direction.
+     *
+     * @param dir   The direction to move in
+     * @param amt   The amount to move
+     */
+	public void move(Vector3f dir, float amt)
+	{
+		pos = pos.add(dir.mul(amt));
+	}
 
-    public Camera(Vector3f pos, Vector3f forward, Vector3f up) {
-        this.pos = pos;
-        this.forward = forward;
-        this.up = up;
+    /**
+     * Rotates around an x axis.
+     *
+     * @param angle Angle to rotate
+     */
+    public void rotateX(float angle)
+    {
+        Vector3f Haxis = yAxis.cross(forward).normalized();
 
-        up.normalize();
-        forward.normalize();
-    }
+        forward = forward.rotate(angle, Haxis).normalized();
 
-    public void input() {
-        float moveAmt = (float) (10 * Time.getDelta());
-        float rotationAmt = (float) (100 * Time.getDelta());
-
-        if (Input.getKey(Keyboard.KEY_W)) {
-            move(getForward(), moveAmt);
-        }
-        if (Input.getKey(Keyboard.KEY_S)) {
-            move(getForward(), -moveAmt);
-        }
-        if (Input.getKey(Keyboard.KEY_A)) {
-            move(getLeft(), moveAmt);
-        }
-        if (Input.getKey(Keyboard.KEY_D)) {
-            move(getRight(), moveAmt);
-        }
-
-        if (Input.getKey(Keyboard.KEY_UP)) {
-            rotateX(-rotationAmt);
-        }
-        if (Input.getKey(Keyboard.KEY_DOWN)) {
-            rotateX(rotationAmt);
-        }
-        if (Input.getKey(Keyboard.KEY_LEFT)) {
-            rotateY(-rotationAmt);
-        }
-        if (Input.getKey(Keyboard.KEY_RIGHT)) {
-            rotateY(rotationAmt);
-        }
+        up = forward.cross(Haxis).normalized();
     }
 
     /**
-     * Move in a direction.
+     * Rotates around a y axis.
      *
-     * @param dir   Direction to move in
-     * @param amt   Amount to move
+     * @param angle Angle to rotate
      */
-    public void move(Vector3f dir, float amt) {
-        pos = pos.add(dir.mul(amt));
-    }
+	public void rotateY(float angle)
+	{
+		Vector3f Haxis = yAxis.cross(forward).normalized();
+		
+		forward = forward.rotate(angle, yAxis).normalized();
+		
+		up = forward.cross(Haxis).normalized();
+	}
 
     /**
-     * Gets the normalized vector facing left.
+     * Get the left vector of this camera.
      *
-     * @return  The normalized vector facing left
+     * @return  The left vector
      */
-    public Vector3f getLeft() {
-        Vector3f left = forward.cross(up);
-        left.normalize();
-        return left;
-    }
+	public Vector3f getLeft()
+	{
+		return forward.cross(up).normalized();
+	}
 
     /**
-     * Gets the normalized vector facing right.
+     * Get the right vector of this camera.
      *
-     * @return  The normalized vector facing right
+     * @return  The right vector
      */
-    public Vector3f getRight() {
-        Vector3f right = up.cross(forward);
-        right.normalize();
-        return right;
-    }
+	public Vector3f getRight()
+	{
+		return up.cross(forward).normalized();
+	}
+	
+	public Vector3f getPos()
+	{
+		return pos;
+	}
 
-    /**
-     * Rotate an amount around the x-axis.
-     *
-     * @param angle The amount to rotate
-     */
-    public void rotateX(float angle) {
-        Vector3f hAxis = yAxis.cross(forward);
-        hAxis.normalize();
+	public void setPos(Vector3f pos)
+	{
+		this.pos = pos;
+	}
 
-        forward.rotate(angle, hAxis);
-        forward.normalize();
+	public Vector3f getForward()
+	{
+		return forward;
+	}
 
-        up = forward.cross(hAxis);
-        up.normalize();
-    }
+	public void setForward(Vector3f forward)
+	{
+		this.forward = forward;
+	}
 
-    /**
-     * Rotate an amount around the y-axis.
-     *
-     * @param angle The amount to rotate
-     */
-    public void rotateY(float angle) {
-        Vector3f hAxis = yAxis.cross(forward);
-        hAxis.normalize();
+	public Vector3f getUp()
+	{
+		return up;
+	}
 
-        forward.rotate(angle, yAxis);
-        forward.normalize();
-
-        up = forward.cross(hAxis);
-        up.normalize();
-    }
-
-    public Vector3f getPos() {
-        return pos;
-    }
-
-    public void setPos(Vector3f pos) {
-        this.pos = pos;
-    }
-
-    public Vector3f getForward() {
-        return forward;
-    }
-
-    public void setForward(Vector3f forward) {
-        this.forward = forward;
-    }
-
-    public Vector3f getUp() {
-        return up;
-    }
-
-    public void setUp(Vector3f up) {
-        this.up = up;
-    }
+	public void setUp(Vector3f up)
+	{
+		this.up = up;
+	}
 }
