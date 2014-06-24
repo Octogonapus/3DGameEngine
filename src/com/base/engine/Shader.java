@@ -7,6 +7,9 @@ import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 public class Shader
 {
+    public static Vector3f COLOR_WHITE = new Vector3f(1, 1, 1), COLOR_BLACK = new Vector3f(0, 0, 0);
+    public static Vector3f LIGHT_AMBIENT = new Vector3f(0.1f, 0.1f, 0.1f);
+
 	private int program;
 	private HashMap<String, Integer> uniforms;
 	
@@ -32,9 +35,10 @@ public class Shader
 
     /**
      * Update uniforms.
+     * worldMatrix and projectedMatrix are used instead of a straight up transformation.
      *
-     * @param worldMatrix
-     * @param projectedMatrix
+     * @param worldMatrix       World matrix
+     * @param projectedMatrix   Projection matrix
      * @param material
      */
 	public void updateUniforms(Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material)

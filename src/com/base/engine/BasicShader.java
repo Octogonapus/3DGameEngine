@@ -20,7 +20,15 @@ public class BasicShader extends Shader
 		addUniform("transform");
 		addUniform("color");
 	}
-	
+
+    /**
+     * Update uniforms.
+     * worldMatrix and projectedMatrix are used instead of a straight up transformation.
+     *
+     * @param worldMatrix       World matrix
+     * @param projectedMatrix   Projection matrix
+     * @param material          Material for color and texture
+     */
 	public void updateUniforms(Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material)
 	{
 		if(material.getTexture() != null)

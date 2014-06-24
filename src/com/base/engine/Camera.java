@@ -51,6 +51,10 @@ public class Camera
 			move(getLeft(), movAmt);
 		if(Input.getKey(Input.KEY_D))
 			move(getRight(), movAmt);
+        if (Input.getKey(Input.KEY_Z))
+            move(yAxis, movAmt);
+        if (Input.getKey(Input.KEY_X))
+            move(yAxis, -movAmt);
 		
 		if(mouseLocked)
 		{
@@ -87,11 +91,11 @@ public class Camera
      */
     public void rotateX(float angle)
     {
-        Vector3f Haxis = yAxis.cross(forward).normalized();
+        Vector3f hAxis = yAxis.cross(forward).normalized();
 
-        forward = forward.rotate(angle, Haxis).normalized();
+        forward = forward.rotate(angle, hAxis).normalized();
 
-        up = forward.cross(Haxis).normalized();
+        up = forward.cross(hAxis).normalized();
     }
 
     /**
@@ -101,11 +105,11 @@ public class Camera
      */
 	public void rotateY(float angle)
 	{
-		Vector3f Haxis = yAxis.cross(forward).normalized();
+		Vector3f hAxis = yAxis.cross(forward).normalized();
 		
 		forward = forward.rotate(angle, yAxis).normalized();
 		
-		up = forward.cross(Haxis).normalized();
+		up = forward.cross(hAxis).normalized();
 	}
 
     /**
