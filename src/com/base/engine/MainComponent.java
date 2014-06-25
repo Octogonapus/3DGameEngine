@@ -1,6 +1,6 @@
 package com.base.engine;
 
-public class MainComponent 
+public class MainComponent
 {
 	public static final int WIDTH = 800, HEIGHT = 600;
 	public static final String TITLE = "3D Engine";

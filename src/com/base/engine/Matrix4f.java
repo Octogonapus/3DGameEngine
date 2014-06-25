@@ -171,6 +171,11 @@ public class Matrix4f
 		return res;
 	}
 
+    /**
+     * Return a deep copy of this matrix.
+     *
+     * @return  A deep copy of this matrix
+     */
 	public float[][] getM()
 	{
 		float[][] res = new float[4][4];
@@ -181,8 +186,8 @@ public class Matrix4f
 		
 		return res;
 	}
-	
-	public float get(int x, int y)
+
+    public float get(int x, int y)
 	{
 		return m[x][y];
 	}
