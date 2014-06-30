@@ -1,23 +1,24 @@
-package com.base.engine;
+package com.base.engine.rendering;
+
+import com.base.engine.core.*;
+
+/**
+ * @author Octogonapus
+ */
 
 public class Camera
 {
 	public static final Vector3f yAxis = new Vector3f(0,1,0);
 	
-	private Vector3f pos;
-	private Vector3f forward;
-	private Vector3f up;
+	private Vector3f pos, forward, up;
+    private Matrix4f projection;
 	
-	public Camera()
+	public Camera(float fov, float aspect, float zNear, float zFar)
 	{
-		this(new Vector3f(0,0,0), new Vector3f(0,0,1), new Vector3f(0,1,0));
-	}
-	
-	public Camera(Vector3f pos, Vector3f forward, Vector3f up)
-	{
-		this.pos = pos;
-		this.forward = forward.normalized();
-		this.up = up.normalized();
+		this.pos = new Vector3f(0, 0 ,0);
+		this.forward = new Vector3f(0, 0 ,1).normalized();
+		this.up = new Vector3f(0, 1 ,0).normalized();
+        projection = new Matrix4f().initPerspective(fov, aspect, zNear, zFar);
 	}
 
 	boolean mouseLocked = false;
@@ -131,6 +132,19 @@ public class Camera
 	{
 		return up.cross(forward).normalized();
 	}
+
+    /**
+     * Gets this camera's projection matrix.
+     *
+     * @return  This camera's projection matrix
+     */
+    public Matrix4f getViewProjection()
+    {
+        Matrix4f cameraRotation = new Matrix4f().initRotation(forward, up);
+        Matrix4f cameraTranslation = new Matrix4f().initTranslation(-pos.getX(), -pos.getY(), -pos.getZ());
+
+        return projection.mul(cameraRotation.mul(cameraTranslation));
+    }
 	
 	public Vector3f getPos()
 	{

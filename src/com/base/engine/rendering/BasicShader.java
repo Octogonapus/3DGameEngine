@@ -1,4 +1,11 @@
-package com.base.engine;
+package com.base.engine.rendering;
+
+import com.base.engine.core.Matrix4f;
+import com.base.engine.core.Transform;
+
+/**
+ * @author Octogonapus
+ */
 
 public class BasicShader extends Shader
 {
@@ -24,17 +31,13 @@ public class BasicShader extends Shader
     /**
      * Update uniforms.
      * worldMatrix and projectedMatrix are used instead of a straight up transformation.
-     *
-     * @param worldMatrix       World matrix
-     * @param projectedMatrix   Projection matrix
-     * @param material          Material for color and texture
      */
-	public void updateUniforms(Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material)
+    @Override
+	public void updateUniforms(Transform transform, Material material)
 	{
-		if(material.getTexture() != null)
-			material.getTexture().bind();
-		else
-			RenderUtil.unbindTextures();
+        Matrix4f worldMatrix = transform.getTransformation();
+        Matrix4f projectedMatrix = getRenderingEngine().getMainCamera().getViewProjection().mul(worldMatrix);
+		material.getTexture().bind();
 		
 		setUniform("transform", projectedMatrix);
 		setUniform("color", material.getColor());

@@ -1,7 +1,11 @@
-package com.base.engine;
+package com.base.engine.core;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
+/**
+ * @author Octogonapus
+ */
 
 public class Input 
 {

@@ -1,10 +1,15 @@
-package com.base.engine;
+package com.base.engine.core;
 
+import com.base.engine.rendering.Vertex;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+
+/**
+ * @author Octogonapus
+ */
 
 public class Util
 {

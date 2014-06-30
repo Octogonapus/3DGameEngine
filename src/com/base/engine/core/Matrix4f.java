@@ -1,4 +1,8 @@
-package com.base.engine;
+package com.base.engine.core;
+
+/**
+ * @author Octogonapus
+ */
 
 public class Matrix4f
 {
@@ -99,19 +103,17 @@ public class Matrix4f
 	}
 
     /**
-     * Initialize a projection matrix.
+     * Initialize a perspective matrix.
      *
      * @param fov    Field of view
-     * @param width  Screen width
-     * @param height Screen height
-     * @param zNear  Near clipping bound
-     * @param zFar   Far clipping bound
+     * @param ar     Aspect ratio
+     * @param zNear  Near clipping plane
+     * @param zFar   Far clipping plane
      * @return       A projection matrix
      */
-	public Matrix4f initProjection(float fov, float width, float height, float zNear, float zFar)
+	public Matrix4f initPerspective(float fov, float ar, float zNear, float zFar)
 	{
-		float ar = width/height;
-		float tanHalfFOV = (float)Math.tan(Math.toRadians(fov / 2));
+		float tanHalfFOV = (float)Math.tan(fov / 2);
 		float zRange = zNear - zFar;
 		
 		m[0][0] = 1.0f / (tanHalfFOV * ar);	m[0][1] = 0;					m[0][2] = 0;	m[0][3] = 0;
@@ -124,13 +126,13 @@ public class Matrix4f
 	}
 
     /**
-     * Initialize a camera matrix.
+     * Initialize a rotation matrix.
      *
      * @param forward   Forward vector
      * @param up        Up vector
      * @return          A camera matrix
      */
-	public Matrix4f initCamera(Vector3f forward, Vector3f up)
+	public Matrix4f initRotation(Vector3f forward, Vector3f up)
 	{
 		Vector3f f = forward.normalized();
 		

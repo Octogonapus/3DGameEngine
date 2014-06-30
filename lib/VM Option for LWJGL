@@ -1,0 +1,11 @@
+Windows:
+-Djava.library.path=lib/native/windows
+
+Mac OS X:
+-Djava.library.path=lib/native/macosx
+
+Linux:
+-Djava.library.path=lib/native/linux
+
+Solaris:
+-Djava.library.path=lib/native/solaris

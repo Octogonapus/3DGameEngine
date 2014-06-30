@@ -1,21 +1,38 @@
-package com.base.engine;
+package com.base.engine.core;
 
-public class MainComponent
+import com.base.engine.rendering.Window;
+
+/**
+ * @author Octogonapus
+ */
+
+public class CoreEngine
 {
-	public static final int WIDTH = 800, HEIGHT = 600;
-	public static final String TITLE = "3D Engine";
-	public static final double FRAME_CAP = 5000.0;
-	
 	private boolean isRunning;
 	private Game game;
+    private RenderingEngine renderingEngine;
+    private int width, height;
+    private double frameTime;
 	
-	public MainComponent()
+	public CoreEngine(int width, int height, double frameCap, Game game)
 	{
-		System.out.println(RenderUtil.getOpenGLVersion());
-		RenderUtil.initGraphics();
-		isRunning = false;
-		game = new Game();
+        isRunning = false;
+        this.game = game;
+        this.width = width;
+        this.height = height;
+        this.frameTime = 1.0 / frameCap;
 	}
+
+    /**
+     * Create a window.
+     *
+     * @param title Title of the window
+     */
+    public void createWindow(String title)
+    {
+        Window.createWindow(width, height, title);
+        renderingEngine = new RenderingEngine();
+    }
 
     /**
      * Start the engine.
@@ -48,8 +65,8 @@ public class MainComponent
 		
 		int frames = 0;
 		long frameCounter = 0;
-		
-		final double frameTime = 1.0 / FRAME_CAP;
+
+        game.init();
 		
 		long lastTime = Time.getTime();
 		double unprocessedTime = 0;
@@ -72,11 +89,14 @@ public class MainComponent
 				unprocessedTime -= frameTime;
 				
 				if(Window.isCloseRequested())
-					stop();
+                {
+                    stop();
+                }
 				
 				Time.setDelta(frameTime);
 				
 				game.input();
+                renderingEngine.input();
 				Input.update();
 				
 				game.update();
@@ -90,7 +110,8 @@ public class MainComponent
 			}
 			if(render)
 			{
-				render();
+                renderingEngine.render(game.getRootObject());
+                Window.render();
 				frames++;
 			}
 			else
@@ -110,29 +131,10 @@ public class MainComponent
 	}
 
     /**
-     * Render to the screen.
-     */
-	private void render()
-	{
-		RenderUtil.clearScreen();
-		game.render();
-		Window.render();
-	}
-
-    /**
      * Dispose of allocated resources.
      */
 	private void cleanUp()
 	{
 		Window.dispose();
-	}
-	
-	public static void main(String[] args)
-	{
-		Window.createWindow(WIDTH, HEIGHT, TITLE);
-		
-		MainComponent game = new MainComponent();
-		
-		game.start();
 	}
 }

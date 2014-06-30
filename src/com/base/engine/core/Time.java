@@ -1,4 +1,8 @@
-package com.base.engine;
+package com.base.engine.core;
+
+/**
+ * @author Octogonapus
+ */
 
 public class Time 
 {

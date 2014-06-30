@@ -1,4 +1,4 @@
-package com.base.engine;
+package com.base.engine.rendering;
 
 import org.newdawn.slick.opengl.TextureLoader;
 
@@ -7,6 +7,10 @@ import java.io.FileInputStream;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
+
+/**
+ * @author Octogonapus
+ */
 
 public class Texture
 {

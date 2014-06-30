@@ -1,4 +1,8 @@
-package com.base.engine;
+package com.base.engine.rendering;
+
+import com.base.engine.core.Util;
+import com.base.engine.core.Vector3f;
+import org.lwjgl.opengl.GL15;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -7,6 +11,10 @@ import java.util.ArrayList;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
+
+/**
+ * @author Octogonapus
+ */
 
 public class Mesh
 {
@@ -58,7 +66,7 @@ public class Mesh
 		size = indices.length;
 		
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, Util.createFlippedBuffer(vertices), GL_STATIC_DRAW);
+		GL15.glBufferData(GL_ARRAY_BUFFER, Util.createFlippedBuffer(vertices), GL_STATIC_DRAW);
 		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, Util.createFlippedBuffer(indices), GL_STATIC_DRAW);

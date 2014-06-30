@@ -1,4 +1,8 @@
-package com.base.engine;
+package com.base.engine.rendering;
+
+import com.base.engine.core.Matrix4f;
+import com.base.engine.core.Transform;
+import com.base.engine.core.Vector3f;
 
 /**
  * @author Octogonapus
@@ -73,12 +77,12 @@ public class PhongShader extends Shader
      * @param projectedMatrix   Projection matrix
      * @param material          Material for color and texture
      */
-    public void updateUniforms(Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material)
+    @Override
+    public void updateUniforms(Transform transform, Material material)
     {
-        if(material.getTexture() != null)
-            material.getTexture().bind();
-        else
-            RenderUtil.unbindTextures();
+        Matrix4f worldMatrix = transform.getTransformation();
+        Matrix4f projectedMatrix = getRenderingEngine().getMainCamera().getViewProjection().mul(worldMatrix);
+        material.getTexture().bind();
 
         setUniform("transform", worldMatrix);
         setUniform("transformProjected", projectedMatrix);
@@ -89,7 +93,7 @@ public class PhongShader extends Shader
 
         setUniformf("specularIntensity", material.getSpecularIntensity());
         setUniformf("specularPower", material.getSpecularPower());
-        setUniform("eyePos", Transform.getCamera().getPos());
+        setUniform("eyePos", getRenderingEngine().getMainCamera().getPos());
 
         for (int i = 0; i < pointLights.length; i++) {
             setUniform("pointLights[" + i + "]", pointLights[i]);
