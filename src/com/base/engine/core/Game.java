@@ -16,17 +16,17 @@ public abstract class Game
     /**
      * Handle input.
      */
-    public void input()
+    public void input(float delta)
     {
-        getRootObject().input();
+        getRootObject().input(delta);
     }
 
     /**
      * Update objects.
      */
-    public void update()
+    public void update(float delta)
     {
-        getRootObject().update();
+        getRootObject().update(delta);
     }
 
     public GameObject getRootObject()

@@ -129,6 +129,11 @@ public class Shader
         addProgram(loadShader(text), GL_FRAGMENT_SHADER);
     }
 
+    public void setAttribLocation(String attribName, int location)
+    {
+        glBindAttribLocation(program, location, attribName);
+    }
+
     /**
      * Compile this shader.
      */

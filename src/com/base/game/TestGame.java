@@ -1,6 +1,13 @@
 package com.base.game;
 
-import com.base.engine.core.*;
+import com.base.engine.components.DirectionalLight;
+import com.base.engine.components.MeshRenderer;
+import com.base.engine.components.PointLight;
+import com.base.engine.components.SpotLight;
+import com.base.engine.core.Game;
+import com.base.engine.core.GameObject;
+import com.base.engine.core.Vector2f;
+import com.base.engine.core.Vector3f;
 import com.base.engine.rendering.*;
 
 /**
@@ -9,18 +16,15 @@ import com.base.engine.rendering.*;
 
 public class TestGame extends Game
 {
-//    private Camera camera;
-
     /**
      * Initializes this game, called when this game starts.
      */
     public void init()
     {
-//        camera = new Camera();
 
         float fieldDepth = 10.0f;
         float fieldWidth = 10.0f;
-        Vertex[] vertices = new Vertex[] {
+        Vertex[] vertices = new Vertex[]{
                 new Vertex(new Vector3f(-fieldWidth, 0.0f, -fieldDepth), new Vector2f(0.0f, 0.0f)),
                 new Vertex(new Vector3f(-fieldWidth, 0.0f, fieldDepth * 3), new Vector2f(0.0f, 1.0f)),
                 new Vertex(new Vector3f(fieldWidth * 3, 0.0f, -fieldDepth), new Vector2f(1.0f, 0.0f)),
@@ -41,35 +45,22 @@ public class TestGame extends Game
         planeObject.addComponent(meshRenderer);
         planeObject.getTransform().setTranslation(0, -1, 5);
 
+        GameObject directionalLightObject = new GameObject();
+        DirectionalLight directionalLight = new DirectionalLight(new Vector3f(0, 0, 1), 0.4f, new Vector3f(1, 1, 1));
+        directionalLightObject.addComponent(directionalLight);
+
+        GameObject pointLightObject = new GameObject();
+        PointLight pointLight = new PointLight(new Vector3f(0, 1, 0), 0.4f, new Vector3f(0, 0, 1));
+        pointLightObject.addComponent(pointLight);
+
+        GameObject spotLightObject = new GameObject();
+        SpotLight spotLight = new SpotLight(new Vector3f(0, 1, 1), 0.4f, new Vector3f(0, 0, 0.1f), new Vector3f(1, 0, 0), 0.7f);
+        spotLightObject.addComponent(spotLight);
+        spotLight.getTransform().setTranslation(5, 0 ,5);
+
         getRootObject().addChild(planeObject);
-
-//        Transform.setProjection(70f, Window.getWidth(), Window.getHeight(), 0.1f, 1000);
-//        Transform.setCamera(camera);
+        getRootObject().addChild(directionalLightObject);
+        getRootObject().addChild(pointLightObject);
+        getRootObject().addChild(spotLightObject);
     }
-
-//    /**
-//     * Handle input.
-//     */
-//    public void input()
-//    {
-//        camera.input();
-//        root.input();
-//    }
-//
-//    /**
-//     * Update objects.
-//     */
-//    public void update()
-//    {
-//        root.getTransform().setTranslation(0, -1, 5);
-//        root.update();
-//    }
-//
-//    /**
-//     * Render objects.
-//     */
-//    public void render()
-//    {
-//        root.render();
-//    }
 }

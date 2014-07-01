@@ -37,6 +37,17 @@ public class Vector2f
 	}
 
     /**
+     * Gets the cross product of two vectors.
+     *
+     * @param r The other vector
+     * @return  The cross product
+     */
+    public float cross(Vector2f r)
+    {
+        return x * r.getY() - y * r.getX();
+    }
+
+    /**
      * Normalize this vector.
      *
      * @return  The normalized vector
@@ -62,6 +73,18 @@ public class Vector2f
 		
 		return new Vector2f((float)(x * cos - y * sin),(float)(x * sin + y * cos));
 	}
+
+    /**
+     * Interpolate this vector.
+     *
+     * @param dest          Destination vector
+     * @param lerpFactor    Interpolation factor
+     * @return              Interpolated vector
+     */
+    public Vector2f lerp(Vector2f dest, float lerpFactor)
+    {
+        return dest.sub(this).mul(lerpFactor).add(this);
+    }
 	
 	public Vector2f add(Vector2f r)
 	{
@@ -132,4 +155,14 @@ public class Vector2f
 	{
 		this.y = y;
 	}
+
+    public boolean equals(Vector2f r)
+    {
+        return x == r.getX() && y == r.getY();
+    }
+
+    public float max()
+    {
+        return Math.max(x, y);
+    }
 }
