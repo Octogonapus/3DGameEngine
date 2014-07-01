@@ -98,7 +98,7 @@ public class CoreEngine
 				Input.update();
 				
 				game.update((float) frameTime);
-				
+
 				if(frameCounter >= 1.0)
 				{
 					System.out.println(frames);

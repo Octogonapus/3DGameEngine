@@ -47,6 +47,7 @@ public class TestGame extends Game
 
         Mesh mesh = new Mesh(vertices, indices, true);
         Mesh mesh2 = new Mesh(vertices2, indices2, true);
+        Mesh tempMesh = new Mesh("monkeySmoothNormalsTextures.obj");
         Material material = new Material();
         material.addTexture("diffuse", new Texture("test.png"));
         material.addFloat("specularIntensity", 1f);
@@ -57,7 +58,7 @@ public class TestGame extends Game
         planeObject.getTransform().getPos().set(0, -1, 5);
 
         GameObject directionalLightObject = new GameObject();
-        DirectionalLight directionalLight = new DirectionalLight(new Vector3f(0, 0, 1), 0.4f);
+        DirectionalLight directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), 0.4f);
         directionalLightObject.addComponent(directionalLight);
 
         GameObject pointLightObject = new GameObject();
@@ -76,10 +77,10 @@ public class TestGame extends Game
         addObject(spotLightObject);
 
         Camera camera = new Camera((float) Math.toRadians(70.0f), (float) Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f);
-        //getRootObject().addChild(new GameObject().addComponent(camera));
 
         GameObject testMesh = new GameObject().addComponent(new MeshRenderer(mesh2, material));
         GameObject testMesh2 = new GameObject().addComponent(new MeshRenderer(mesh2, material));
+        GameObject tempMeshObject = new GameObject().addComponent(new MeshRenderer(tempMesh, material));
 
         testMesh.getTransform().getPos().set(0, 2, 0);
         testMesh2.getTransform().getPos().set(0, 0, 5);
@@ -90,6 +91,9 @@ public class TestGame extends Game
         testMesh2.addChild(new GameObject().addComponent(camera));
 
         addObject(testMesh);
+        addObject(tempMeshObject);
+        tempMeshObject.getTransform().setTranslation(5, 5, 5);
+        tempMeshObject.getTransform().setRot(new Quaternion(new Vector3f(0, 1, 0), (float) Math.toRadians(-70.0f)));
 
         directionalLight.getTransform().setRot(new Quaternion(new Vector3f(1, 0, 0), (float) Math.toRadians(-45)));
     }
