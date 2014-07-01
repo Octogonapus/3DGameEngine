@@ -1,13 +1,7 @@
 package com.base.game;
 
-import com.base.engine.components.DirectionalLight;
-import com.base.engine.components.MeshRenderer;
-import com.base.engine.components.PointLight;
-import com.base.engine.components.SpotLight;
-import com.base.engine.core.Game;
-import com.base.engine.core.GameObject;
-import com.base.engine.core.Vector2f;
-import com.base.engine.core.Vector3f;
+import com.base.engine.components.*;
+import com.base.engine.core.*;
 import com.base.engine.rendering.*;
 
 /**
@@ -43,7 +37,7 @@ public class TestGame extends Game
 
         GameObject planeObject = new GameObject();
         planeObject.addComponent(meshRenderer);
-        planeObject.getTransform().setTranslation(0, -1, 5);
+        planeObject.getTransform().getPos().set(0, -1, 5);
 
         GameObject directionalLightObject = new GameObject();
         DirectionalLight directionalLight = new DirectionalLight(new Vector3f(0, 0, 1), 0.4f, new Vector3f(1, 1, 1));
@@ -54,13 +48,16 @@ public class TestGame extends Game
         pointLightObject.addComponent(pointLight);
 
         GameObject spotLightObject = new GameObject();
-        SpotLight spotLight = new SpotLight(new Vector3f(0, 1, 1), 0.4f, new Vector3f(0, 0, 0.1f), new Vector3f(1, 0, 0), 0.7f);
+        SpotLight spotLight = new SpotLight(new Vector3f(0, 1, 1), 0.4f, new Vector3f(0, 0, 0.1f), 0.7f);
+        spotLightObject.getTransform().getPos().set(5, 0, 5);
+        spotLightObject.getTransform().setRot(new Quaternion().initRotation(new Vector3f(0, 1, 0), (float) Math.toRadians(-90.0f)));
         spotLightObject.addComponent(spotLight);
-        spotLight.getTransform().setTranslation(5, 0 ,5);
 
         getRootObject().addChild(planeObject);
         getRootObject().addChild(directionalLightObject);
         getRootObject().addChild(pointLightObject);
         getRootObject().addChild(spotLightObject);
+
+        getRootObject().addChild(new GameObject().addComponent(new Camera((float) Math.toRadians(70.0f), (float) Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f)));
     }
 }

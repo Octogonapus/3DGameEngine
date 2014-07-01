@@ -68,27 +68,34 @@ public class Vector3f
     /**
      * Rotate this vector.
      *
-     * @param angle Angle to rotate
      * @param axis  Axis to rotate around
+     * @param angle Angle to rotate by
      * @return      The rotated vector
      */
-	public Vector3f rotate(float angle, Vector3f axis)
+	public Vector3f rotate(Vector3f axis, float angle)
 	{
-		float sinHalfAngle = (float)Math.sin(Math.toRadians(angle / 2));
-		float cosHalfAngle = (float)Math.cos(Math.toRadians(angle / 2));
-		
-		float rX = axis.getX() * sinHalfAngle;
-		float rY = axis.getY() * sinHalfAngle;
-		float rZ = axis.getZ() * sinHalfAngle;
-		float rW = cosHalfAngle;
-		
-		Quaternion rotation = new Quaternion(rX, rY, rZ, rW);
-		Quaternion conjugate = rotation.conjugate();
-		
-		Quaternion w = rotation.mul(this).mul(conjugate);
-		
-		return new Vector3f(w.getX(), w.getY(), w.getZ());
+        float sinAngle = (float) Math.sin(-angle);
+        float cosAngle = (float) Math.cos(-angle);
+
+        //lol calculus
+        //http://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation
+        return this.cross(axis.mul(sinAngle)).add((this.mul(cosAngle)).add(axis.mul(this.dot(axis.mul(1 - cosAngle)))));
 	}
+
+    /**
+     * Rotate this vector by a quaternion.
+     *
+     * @param rotation  The quaternion
+     * @return      The rotated vector
+     */
+    public Vector3f rotate(Quaternion rotation)
+    {
+        Quaternion conjugate = rotation.conjugate();
+
+        Quaternion w = rotation.mul(this).mul(conjugate);
+
+        return new Vector3f(w.getX(), w.getY(), w.getZ());
+    }
 
     /**
      * Interpolate this vector.
@@ -206,6 +213,13 @@ public class Vector3f
 	{
 		this.z = z;
 	}
+
+    public void set(float x, float y, float z)
+    {
+        this.x = x;
+        this. y = y;
+        this.z = z;
+    }
 
     public boolean equals(Vector3f r)
     {

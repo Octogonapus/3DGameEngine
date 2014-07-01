@@ -10,6 +10,11 @@ public class Quaternion
 	private float y;
 	private float z;
 	private float w;
+
+    public Quaternion()
+    {
+        this(0, 0, 0, 1);
+    }
 	
 	public Quaternion(float x, float y, float z, float w)
 	{
@@ -34,7 +39,7 @@ public class Quaternion
      *
      * @return  The normalized quaternion.
      */
-	public Quaternion normalize()
+	public Quaternion normalized()
 	{
 		float length = length();
 		
@@ -52,7 +57,40 @@ public class Quaternion
 	}
 
     /**
-     * Multiply two quaternions.
+     * Subtract a quaternion from this quaternion.
+     *
+     * @param r The other quaternion
+     * @return  The difference
+     */
+    public Quaternion sub(Quaternion r)
+    {
+        return new Quaternion(x - r.getX(), y - r.getY(), z - r.getZ(), w - r.getW());
+    }
+
+    /**
+     * Add a quaternion to this quaternion.
+     *
+     * @param r The other quaternion
+     * @return  The sum
+     */
+    public Quaternion add(Quaternion r)
+    {
+        return new Quaternion(x + r.getX(), y + r.getY(), z + r.getZ(), w + r.getW());
+    }
+
+    /**
+     * Multiply this quaternion by a float.
+     *
+     * @param r The float
+     * @return  The product
+     */
+    public Quaternion mul(float r)
+    {
+        return new Quaternion(x * r, y * r, z * r, w * r);
+    }
+
+    /**
+     * Multiply this quaternion by another quaternion.
      *
      * @param r The other quaternion
      * @return  The product
@@ -68,7 +106,7 @@ public class Quaternion
 	}
 
     /**
-     * Multiply a quaternion and a vector.
+     * Multiply this quaternion by a vector.
      *
      * @param r The vector
      * @return  The product
@@ -82,6 +120,66 @@ public class Quaternion
 		
 		return new Quaternion(x_, y_, z_, w_);
 	}
+
+    /**
+     * Initialize a quaternion with a rotation around an axis.
+     *
+     * @param axis  Axis of rotation
+     * @param angle Angle of rotation
+     * @return      The rotated quaternion
+     */
+    public Quaternion initRotation(Vector3f axis, float angle)
+    {
+        float sinHalfAngle = (float)Math.sin(angle / 2);
+        float cosHalfAngle = (float)Math.cos(angle / 2);
+
+        this.x = axis.getX() * sinHalfAngle;
+        this.y = axis.getY() * sinHalfAngle;
+        this.z = axis.getZ() * sinHalfAngle;
+        this.w = cosHalfAngle;
+
+        return this;
+    }
+
+    /**
+     * Transform this quaternion into a rotation matrix.
+     *
+     * @return  This quaternion represented as a rotation matrix
+     */
+    public Matrix4f toRotationMatrix()
+    {
+        return new Matrix4f().initRotation(getForward(), getUp(), getRight());
+    }
+
+    public Vector3f getForward()
+    {
+        return new Vector3f(2.0f * (x*z - w*y), 2.0f * (y*z + w*x), 1.0f - 2.0f * (x*x + y*y));
+    }
+
+    public Vector3f getBack()
+    {
+        return new Vector3f(-2.0f * (x*z - w*y), -2.0f * (y*z + w*x), -(1.0f - 2.0f * (x*x + y*y)));
+    }
+
+    public Vector3f getUp()
+    {
+        return new Vector3f(2.0f * (x*y + w*z), 1.0f - 2.0f * (x*x + z*z), 2.0f * (y*z - w*x));
+    }
+
+    public Vector3f getDown()
+    {
+        return new Vector3f(-2.0f * (x*y + w*z), -(1.0f - 2.0f * (x*x + z*z)), -2.0f * (y*z - w*x));
+    }
+
+    public Vector3f getRight()
+    {
+        return new Vector3f(1.0f - 2.0f * (y*y + z*z), 2.0f * (x*y - w*z), 2.0f * (x*z + w*y));
+    }
+
+    public Vector3f getLeft()
+    {
+        return new Vector3f(-(1.0f - 2.0f * (y*y + z*z)), -2.0f * (x*y - w*z), -2.0f * (x*z + w*y));
+    }
 	
 	public float getX()
 	{
@@ -122,4 +220,24 @@ public class Quaternion
 	{
 		this.w = w;
 	}
+
+    public Quaternion set(float x, float y, float z, float w)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
+        return this;
+    }
+
+    public Quaternion set(Quaternion r)
+    {
+        set(r.getX(), r.getY(), r.getZ(), r.getW());
+        return this;
+    }
+
+    public boolean equals(Quaternion r)
+    {
+        return x == r.getX() && y == r.getY() && z == r.getZ() && w == r.getW();
+    }
 }

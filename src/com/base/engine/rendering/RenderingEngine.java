@@ -1,6 +1,7 @@
 package com.base.engine.rendering;
 
 import com.base.engine.components.BaseLight;
+import com.base.engine.components.Camera;
 import com.base.engine.core.GameObject;
 import com.base.engine.core.Vector3f;
 
@@ -34,21 +35,11 @@ public class RenderingEngine
         glEnable(GL_DEPTH_CLAMP);
         glEnable(GL_TEXTURE_2D);
 
-        mainCamera = new Camera((float) Math.toRadians(70.0f), (float) Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f);
+//        mainCamera = new Camera((float) Math.toRadians(70.0f), (float) Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f);
         ambientLight = new Vector3f(0.1f, 0.1f, 0.1f);
 //        activeDirectionalLight = new DirectionalLight(new BaseLight(new Vector3f(0, 0, 1), 0.4f), new Vector3f(1, 1, 1));
 //        activePointLight = new PointLight(new BaseLight(new Vector3f(0, 1, 0), 0.4f), new Attenuation(0, 0, 1), new Vector3f(5, 0, 5), 100);
 //        spotLight = new SpotLight(new PointLight(new BaseLight(new Vector3f(0, 1, 1), 0.4f), new Attenuation(0, 0, 0.1f), new Vector3f(5, 0, 5), 100), new Vector3f(1, 0, 0), 0.7f);
-    }
-
-    /**
-     * Handle input.
-     *
-     * @param delta Delta time
-     */
-    public void input(float delta)
-    {
-        mainCamera.input(delta);
     }
 
     /**
@@ -132,6 +123,11 @@ public class RenderingEngine
     public void addLight(BaseLight light)
     {
         lights.add(light);
+    }
+
+    public void addCamera(Camera camera)
+    {
+        mainCamera = camera;
     }
 
     public BaseLight getActiveLight()
