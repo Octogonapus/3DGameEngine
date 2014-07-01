@@ -44,20 +44,20 @@ public class ForwardDirectional extends Shader
      * @param transform Transform for new projection matrix
      * @param material  Material for ambient color
      */
-    public void updateUniforms(Transform transform, Material material)
+    public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine)
     {
         Matrix4f worldMatrix = transform.getTransformation();
-        Matrix4f projectedMatrix = getRenderingEngine().getMainCamera().getViewProjection().mul(worldMatrix);
-        material.getTexture().bind();
+        Matrix4f projectedMatrix = renderingEngine.getMainCamera().getViewProjection().mul(worldMatrix);
+        material.getTexture("diffuse").bind();
 
         setUniform("model", worldMatrix);
         setUniform("MVP", projectedMatrix);
 
-        setUniformf("specularIntensity", material.getSpecularIntensity());
-        setUniformf("specularPower", material.getSpecularPower());
-        setUniform("eyePos", getRenderingEngine().getMainCamera().getTransform().getTransformedPos());
+        setUniformf("specularIntensity",  material.getFloat("specularIntensity"));
+        setUniformf("specularPower",  material.getFloat("specularPower"));
+        setUniform("eyePos", renderingEngine.getMainCamera().getTransform().getTransformedPos());
 
-        setUniformDirectionalLight("directionalLight", (DirectionalLight) getRenderingEngine().getActiveLight());
+        setUniformDirectionalLight("directionalLight", (DirectionalLight) renderingEngine.getActiveLight());
     }
 
     public void setUniformBaseLight(String uniformName, BaseLight baseLight) {

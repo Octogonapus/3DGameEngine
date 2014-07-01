@@ -18,7 +18,6 @@ public class Shader
     public static Vector3f COLOR_WHITE = new Vector3f(1, 1, 1), COLOR_BLACK = new Vector3f(0, 0, 0);
     public static Vector3f LIGHT_AMBIENT = new Vector3f(0.1f, 0.1f, 0.1f);
 
-    private RenderingEngine  renderingEngine;
 	private int program;
 	private HashMap<String, Integer> uniforms;
 	
@@ -45,7 +44,7 @@ public class Shader
     /**
      * Update uniforms.
      */
-	public void updateUniforms(Transform transform, Material material)
+	public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine)
 	{
         //
 	}
@@ -236,14 +235,4 @@ public class Shader
 	{
 		glUniformMatrix4(uniforms.get(uniformName), true, Util.createFlippedBuffer(value));
 	}
-
-    public void setRenderingEngine(RenderingEngine renderingEngine)
-    {
-        this.renderingEngine = renderingEngine;
-    }
-
-    public RenderingEngine getRenderingEngine()
-    {
-        return renderingEngine;
-    }
 }

@@ -2,71 +2,85 @@ package com.base.engine.rendering;
 
 import com.base.engine.core.Vector3f;
 
+import java.util.HashMap;
+
 /**
  * @author Octogonapus
  */
 
 public class Material
 {
-	private Texture texture;
-	private Vector3f color;
-    private float specularIntensity, specularPower;
+    private HashMap<String, Texture> textureHashMap;
+    private HashMap<String, Vector3f> vector3fHashMap;
+    private HashMap<String, Float> floatHashMap;
 
-    public Material(Texture texture)
+    public Material()
     {
-        this(texture, new Vector3f(1, 1, 1));
-    }
-	
-	public Material(Texture texture, Vector3f color)
-	{
-		this(texture, color, 2, 32);
-	}
-
-    public Material(Texture texture, Vector3f color, float specularIntensity, float specularPower)
-    {
-        this.texture = texture;
-        this.color = color;
-        this.specularIntensity = specularIntensity;
-        this.specularPower = specularPower;
+        textureHashMap = new HashMap<String, Texture>(0);
+        vector3fHashMap = new HashMap<String, Vector3f>(0);
+        floatHashMap = new HashMap<String, Float>(0);
     }
 
-    public Texture getTexture()
-	{
-		return texture;
-	}
-
-	public void setTexture(Texture texture)
-	{
-		this.texture = texture;
-	}
-
-	public Vector3f getColor()
-	{
-		return color;
-	}
-
-	public void setColor(Vector3f color)
-	{
-		this.color = color;
-	}
-
-    public float getSpecularIntensity()
+    public void addTexture(String name, Texture texture)
     {
-        return specularIntensity;
+        textureHashMap.put(name, texture);
     }
 
-    public void setSpecularIntensity(float specularIntensity)
+    public Texture getTexture(String name)
     {
-        this.specularIntensity = specularIntensity;
+        Texture result = textureHashMap.get(name);
+        if (result != null)
+        {
+            return result;
+        }
+
+        return new Texture("test.png");
     }
 
-    public float getSpecularPower()
+    public Texture removeTexture(String name)
     {
-        return specularPower;
+        return textureHashMap.remove(name);
     }
 
-    public void setSpecularPower(float specularPower)
+    public void addVector3f(String name, Vector3f vector3f)
     {
-        this.specularPower = specularPower;
+        vector3fHashMap.put(name, vector3f);
+    }
+
+    public Vector3f getVector3f(String name)
+    {
+        Vector3f result = vector3fHashMap.get(name);
+        if (result != null)
+        {
+            return result;
+        }
+
+        return new Vector3f(0, 0, 0);
+    }
+
+    public Vector3f removeVector3f(String name)
+    {
+        return vector3fHashMap.remove(name);
+    }
+
+    public void addFloat(String name, Float value)
+    {
+        floatHashMap.put(name, value);
+    }
+
+    public Float getFloat(String name)
+    {
+        Float result = floatHashMap.get(name);
+        if (result != null)
+        {
+            return result;
+        }
+
+        return 0f;
+    }
+
+    public Float removeFloat(String name)
+    {
+        return floatHashMap.remove(name);
     }
 }

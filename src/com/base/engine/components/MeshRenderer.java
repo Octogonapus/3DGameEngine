@@ -2,6 +2,7 @@ package com.base.engine.components;
 
 import com.base.engine.rendering.Material;
 import com.base.engine.rendering.Mesh;
+import com.base.engine.rendering.RenderingEngine;
 import com.base.engine.rendering.Shader;
 
 /**
@@ -20,10 +21,10 @@ public class MeshRenderer extends GameComponent
     }
 
     @Override
-    public void render(Shader shader)
+    public void render(Shader shader, RenderingEngine renderingEngine)
     {
         shader.bind();
-        shader.updateUniforms(getTransform(), material);
+        shader.updateUniforms(getTransform(), material, renderingEngine);
         mesh.draw();
     }
 }
