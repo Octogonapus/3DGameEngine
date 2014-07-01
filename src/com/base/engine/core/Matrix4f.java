@@ -151,10 +151,10 @@ public class Matrix4f
 		float tanHalfFOV = (float)Math.tan(fov / 2);
 		float zRange = zNear - zFar;
 		
-		m[0][0] = 1.0f / (tanHalfFOV * ar);	m[0][1] = 0;					m[0][2] = 0;	m[0][3] = 0;
-		m[1][0] = 0;						m[1][1] = 1.0f / tanHalfFOV;	m[1][2] = 0;	m[1][3] = 0;
+		m[0][0] = 1.0f / (tanHalfFOV * ar);	m[0][1] = 0;					m[0][2] = 0;	                    m[0][3] = 0;
+		m[1][0] = 0;						m[1][1] = 1.0f / tanHalfFOV;	m[1][2] = 0;	                    m[1][3] = 0;
 		m[2][0] = 0;						m[2][1] = 0;					m[2][2] = (-zNear -zFar)/zRange;	m[2][3] = 2 * zFar * zNear / zRange;
-		m[3][0] = 0;						m[3][1] = 0;					m[3][2] = 1;	m[3][3] = 0;
+		m[3][0] = 0;						m[3][1] = 0;					m[3][2] = 1;	                    m[3][3] = 0;
 		
 		
 		return this;
@@ -171,12 +171,25 @@ public class Matrix4f
         float height = top - bottom;
         float depth = far - near;
 
-        m[0][0] = 2 / width;	m[0][1] = 0;	m[0][2] = 0;	m[0][3] = -(right + left) / width;
-        m[1][0] = 0;	m[1][1] = 2 / height;	m[1][2] = 0;	m[1][3] = -(top + bottom) / height;
-        m[2][0] = 0;	m[2][1] = 0;	m[2][2] = -2 / depth;	m[2][3] = -(far + near) / depth;
-        m[3][0] = 0;	m[3][1] = 0;	m[3][2] = 0;	m[3][3] = 1;
+        m[0][0] = 2 / width;    m[0][1] = 0;	        m[0][2] = 0;	        m[0][3] = -(right + left) / width;
+        m[1][0] = 0;	        m[1][1] = 2 / height;	m[1][2] = 0;	        m[1][3] = -(top + bottom) / height;
+        m[2][0] = 0;	        m[2][1] = 0;	        m[2][2] = -2 / depth;	m[2][3] = -(far + near) / depth;
+        m[3][0] = 0;	        m[3][1] = 0;	        m[3][2] = 0;	        m[3][3] = 1;
 
         return this;
+    }
+
+    /**
+     * Transform this matrix by a vector.
+     *
+     * @param r The vector
+     * @return  The transformed matrix
+     */
+    public Vector3f transform(Vector3f r)
+    {
+        return new Vector3f(m[0][0] * r.getX() + m[0][1] * r.getY() + m[0][2] * r.getZ() + m[0][3],
+                            m[1][0] * r.getX() + m[1][1] * r.getY() + m[1][2] * r.getZ() + m[1][3],
+                            m[2][0] * r.getX() + m[2][1] * r.getY() + m[2][2] * r.getZ() + m[2][3]);
     }
 
     /**
