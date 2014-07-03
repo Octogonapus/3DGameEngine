@@ -1,6 +1,7 @@
 package com.base.engine.rendering;
 
 import com.base.engine.core.Vector3f;
+import com.base.engine.rendering.resourceManagement.MappedValues;
 
 import java.util.HashMap;
 
@@ -8,7 +9,7 @@ import java.util.HashMap;
  * @author Octogonapus
  */
 
-public class Material
+public class Material extends MappedValues
 {
     private HashMap<String, Texture> textureHashMap;
     private HashMap<String, Vector3f> vector3fHashMap;
@@ -16,6 +17,8 @@ public class Material
 
     public Material()
     {
+        super();
+
         textureHashMap = new HashMap<String, Texture>(0);
         vector3fHashMap = new HashMap<String, Vector3f>(0);
         floatHashMap = new HashMap<String, Float>(0);

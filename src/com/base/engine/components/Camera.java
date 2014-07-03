@@ -1,8 +1,10 @@
 package com.base.engine.components;
 
-import com.base.engine.core.*;
+import com.base.engine.core.Input;
+import com.base.engine.core.Matrix4f;
+import com.base.engine.core.Vector2f;
+import com.base.engine.core.Vector3f;
 import com.base.engine.rendering.RenderingEngine;
-import com.base.engine.rendering.Window;
 
 /**
  * @author Octogonapus
@@ -20,7 +22,7 @@ public class Camera extends GameComponent
 	}
 
 	boolean mouseLocked = false;
-	Vector2f centerPosition = new Vector2f(Window.getWidth()/2, Window.getHeight()/2);
+	Vector2f centerPosition = new Vector2f(400/2, 300/2);
 
     /**
      * Takes input and reacts accordingly.
@@ -73,7 +75,7 @@ public class Camera extends GameComponent
             }
 			if(rotY || rotX)
             {
-                Input.setMousePosition(new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2));
+                Input.setMousePosition(new Vector2f(400 / 2, 300 / 2));
             }
 		}
 	}

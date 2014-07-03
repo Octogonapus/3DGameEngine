@@ -25,6 +25,8 @@ public class GameObject
 
     /**
      * Handle input.
+     *
+     * @param delta Delta time
      */
     public void input(float delta)
     {
@@ -41,6 +43,8 @@ public class GameObject
 
     /**
      * Update objects.
+     *
+     * @param delta Delta time
      */
     public void update(float delta)
     {
@@ -59,6 +63,9 @@ public class GameObject
 
     /**
      * Render objects.
+     *
+     * @param shader            The shader to render
+     * @param renderingEngine   The Rendering Engine to render with
      */
     public void render(Shader shader, RenderingEngine renderingEngine)
     {
@@ -73,6 +80,11 @@ public class GameObject
         }
     }
 
+    /**
+     * Adds all components and children to a Rendering Engine
+     *
+     * @param renderingEngine   The Rendering Engine to add the components and children to
+     */
     public void addToRenderingEngine(RenderingEngine renderingEngine)
     {
         for (GameComponent component : components)
@@ -86,12 +98,23 @@ public class GameObject
         }
     }
 
+    /**
+     * Add a child.
+     *
+     * @param child The child to add
+     */
     public void addChild(GameObject child)
     {
         children.add(child);
         child.getTransform().setParent(transform);
     }
 
+    /**
+     * Add a component.
+     *
+     * @param component The component to add
+     * @return          This game object with the added component
+     */
     public GameObject addComponent(GameComponent component)
     {
         components.add(component);

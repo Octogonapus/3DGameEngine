@@ -1,5 +1,6 @@
 package com.base.engine.core;
 
+import com.base.engine.components.Camera;
 import com.base.engine.rendering.RenderingEngine;
 
 /**
@@ -17,6 +18,8 @@ public abstract class Game
 
     /**
      * Handle input.
+     *
+     * @param delta Delta time
      */
     public void input(float delta)
     {
@@ -25,6 +28,8 @@ public abstract class Game
 
     /**
      * Update children.
+     *
+     * @param delta Delta time
      */
     public void update(float delta)
     {
@@ -33,6 +38,8 @@ public abstract class Game
 
     /**
      * Render children.
+     *
+     * @param renderingEngine The Rendering Engine to render with
      */
     public void render(RenderingEngine renderingEngine)
     {
@@ -42,6 +49,11 @@ public abstract class Game
     public void addObject(GameObject object)
     {
         getRootObject().addChild(object);
+    }
+
+    public void setMainCamera(RenderingEngine renderingEngine, Camera camera)
+    {
+        renderingEngine.setMainCamera(camera);
     }
 
     private GameObject getRootObject()

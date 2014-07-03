@@ -10,6 +10,10 @@ import com.base.engine.rendering.*;
 
 public class TestGame extends Game
 {
+    private GameObject monkeyMeshObject;
+    private Camera camera;
+    private boolean doRotate = false;
+
     /**
      * Initializes this game, called when this game starts.
      */
@@ -47,8 +51,8 @@ public class TestGame extends Game
 
         Mesh mesh = new Mesh(vertices, indices, true);
         Mesh mesh2 = new Mesh(vertices2, indices2, true);
-        Mesh tempMesh = new Mesh("monkeySmooth.obj");
-        Mesh tempMesh2 = new Mesh("monkeySmooth.obj");
+        Mesh monkeyMesh = new Mesh("monkeySmooth.obj");
+        Mesh monkeyMesh2 = new Mesh("monkeySmooth.obj");
 
         Material material = new Material();
         material.addTexture("diffuse", new Texture("test.png"));
@@ -83,29 +87,45 @@ public class TestGame extends Game
         addObject(pointLightObject);
         addObject(spotLightObject);
 
-        Camera camera = new Camera((float) Math.toRadians(70.0f), (float) Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f);
+        camera = new Camera((float) Math.toRadians(70.0f), (float) 400 / (float) 300, 0.01f, 1000.0f);
+        planeObject.addChild(new GameObject().addComponent(camera));
 
         GameObject testMesh = new GameObject().addComponent(new MeshRenderer(mesh2, material));
         GameObject testMesh2 = new GameObject().addComponent(new MeshRenderer(mesh2, material));
-        GameObject tempMeshObject = new GameObject().addComponent(new MeshRenderer(tempMesh, material));
-        GameObject tempMesh2Object = new GameObject().addComponent(new MeshRenderer(tempMesh2, material2));
+        monkeyMeshObject = new GameObject().addComponent(new MeshRenderer(monkeyMesh, material));
+        GameObject monkeyMesh2Object = new GameObject().addComponent(new MeshRenderer(monkeyMesh2, material2));
+        monkeyMeshObject.addChild(monkeyMesh2Object);
+
+        addObject(testMesh);
+        addObject(monkeyMeshObject);
+        monkeyMeshObject.getTransform().setTranslation(5, 5, 5);
+        monkeyMeshObject.getTransform().setRot(new Quaternion(new Vector3f(0, 1, 0), (float) Math.toRadians(-70.0f)));
+        monkeyMesh2Object.getTransform().setTranslation(0, 2, 0);
 
         testMesh.getTransform().getPos().set(0, 2, 0);
         testMesh2.getTransform().getPos().set(0, 0, 5);
         testMesh.addChild(testMesh2);
-
         testMesh.getTransform().setRot(new Quaternion(new Vector3f(0, 1, 0), 0.4f));
 
-        testMesh2.addChild(new GameObject().addComponent(camera));
-
-        addObject(testMesh);
-        addObject(tempMeshObject);
-        addObject(tempMesh2Object);
-        tempMeshObject.getTransform().setTranslation(5, 5, 5);
-        tempMeshObject.getTransform().setRot(new Quaternion(new Vector3f(0, 1, 0), (float) Math.toRadians(-70.0f)));
-        tempMesh2Object.getTransform().setTranslation(5, 7, 5);
-        tempMesh2Object.getTransform().setRot(new Quaternion(new Vector3f(0, 1, 0), (float) Math.toRadians(-70.0f)));
-
         directionalLight.getTransform().setRot(new Quaternion(new Vector3f(1, 0, 0), (float) Math.toRadians(-45)));
+    }
+
+    @Override
+    public void input(float delta)
+    {
+        super.input(delta);
+
+        doRotate = Input.getKey(Input.KEY_SPACE);
+    }
+
+    @Override
+    public void update(float delta)
+    {
+        super.update(delta);
+
+        if (doRotate)
+        {
+            monkeyMeshObject.getTransform().setRot(camera.getTransform().getRot());
+        }
     }
 }

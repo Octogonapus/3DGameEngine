@@ -11,6 +11,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 
 /**
  * @author Octogonapus
@@ -43,12 +44,23 @@ public class Texture
     }
 
     /**
-     * Bind this texture for use.
+     * Bind with a custom sampler slot.
+     *
+     * @param samplerSlot The pointer for the sampler slot
      */
-	public void bind()
+	public void bind(int samplerSlot)
 	{
+        glActiveTexture(GL_TEXTURE0 + samplerSlot);
 		glBindTexture(GL_TEXTURE_2D, resource.getId());
 	}
+
+    /**
+     * Bind with the default sampler slot.
+     */
+    public void bind()
+    {
+        bind(0);
+    }
 
     /**
      * Load a texture by file name.

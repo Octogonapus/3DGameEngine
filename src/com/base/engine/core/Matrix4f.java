@@ -163,7 +163,13 @@ public class Matrix4f
     /**
      * Initialize an orthographic matrix.
      *
-     * @return  An identity matrix.
+     * @param left      Object left
+     * @param right     Object right
+     * @param bottom    Object bottom
+     * @param top       Object top
+     * @param near      Object near
+     * @param far       Object far
+     * @return          An orthographic matrix
      */
     public Matrix4f initOrthographic(float left, float right, float bottom, float top, float near, float far)
     {

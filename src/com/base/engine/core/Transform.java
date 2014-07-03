@@ -51,6 +51,12 @@ public class Transform
         }
     }
 
+    /**
+     * Rotate this transform an angle along an axis.
+     *
+     * @param axis  The axis to rotate on
+     * @param angle The angle to rotate
+     */
     public void rotate(Vector3f axis, float angle)
     {
         rot = new Quaternion(axis, angle).mul(rot).normalized();
