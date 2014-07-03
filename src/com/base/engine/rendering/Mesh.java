@@ -4,9 +4,12 @@ import com.base.engine.core.Util;
 import com.base.engine.core.Vector3f;
 import com.base.engine.rendering.meshLoading.IndexedModel;
 import com.base.engine.rendering.meshLoading.OBJModel;
+import com.base.engine.rendering.resourceManagement.MeshResource;
 import org.lwjgl.opengl.GL15;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -18,14 +21,25 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Mesh
 {
-    //HOLY FUCK A POINTER
-	private int vbo, ibo;
-	private int size;
+    private static HashMap<String, WeakReference<MeshResource>> loadedModels = new HashMap<String, WeakReference<MeshResource>>(0);
+    private MeshResource resource;
+    private String fileName;
 
     public Mesh(String fileName)
     {
-        initMeshData();
-        loadMesh(fileName);
+        this.fileName = fileName;
+        WeakReference<MeshResource> ref = loadedModels.get(fileName);
+
+        if (ref != null && ref.get() != null)
+        {
+            resource = ref.get();
+            resource.addReference();
+        }
+        else
+        {
+            loadMesh(fileName);
+            loadedModels.put(fileName, new WeakReference<MeshResource>(resource));
+        }
     }
 
     public Mesh(Vertex[] vertices, int[] indices)
@@ -35,18 +49,8 @@ public class Mesh
 
     public Mesh(Vertex[] vertices, int[] indices, boolean calcNormals)
     {
-        initMeshData();
+        fileName = "";
         addVertices(vertices, indices, calcNormals);
-    }
-
-    /**
-     * Initializes mesh data to defaults finds space on the graphics card for buffers.
-     */
-    private void initMeshData()
-    {
-        vbo = glGenBuffers();
-        ibo = glGenBuffers();
-        size = 0;
     }
 
     /**
@@ -63,12 +67,12 @@ public class Mesh
             calcNormals(vertices, indices);
         }
 
-		size = indices.length;
+		resource = new MeshResource(indices.length);
 		
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, resource.getVbo());
 		GL15.glBufferData(GL_ARRAY_BUFFER, Util.createFlippedBuffer(vertices), GL_STATIC_DRAW);
 		
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, resource.getIbo());
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, Util.createFlippedBuffer(indices), GL_STATIC_DRAW);
 	}
 
@@ -81,13 +85,13 @@ public class Mesh
 		glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
 		
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, resource.getVbo());
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, Vertex.SIZE * 4, 0);
 		glVertexAttribPointer(1, 2, GL_FLOAT, false, Vertex.SIZE * 4, 12);
         glVertexAttribPointer(2, 3, GL_FLOAT, false, Vertex.SIZE * 4, 20);
 		
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-		glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, resource.getIbo());
+		glDrawElements(GL_TRIANGLES, resource.getSize(), GL_UNSIGNED_INT, 0);
 		
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
@@ -163,6 +167,17 @@ public class Mesh
 
         addVertices(vertexData, Util.toIntArray(indexData), false);
 
-        return null;
+        return this;
+    }
+
+    @Override
+    protected void finalize() throws Throwable
+    {
+        if (resource.removeReference() && !fileName.isEmpty())
+        {
+            loadedModels.remove(fileName);
+        }
+
+        super.finalize();
     }
 }

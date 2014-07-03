@@ -47,11 +47,18 @@ public class TestGame extends Game
 
         Mesh mesh = new Mesh(vertices, indices, true);
         Mesh mesh2 = new Mesh(vertices2, indices2, true);
-        Mesh tempMesh = new Mesh("monkeySmoothNormalsTextures.obj");
+        Mesh tempMesh = new Mesh("monkeySmooth.obj");
+        Mesh tempMesh2 = new Mesh("monkeySmooth.obj");
+
         Material material = new Material();
         material.addTexture("diffuse", new Texture("test.png"));
         material.addFloat("specularIntensity", 1f);
         material.addFloat("specularPower", 8f);
+
+        Material material2 = new Material();
+        material2.addTexture("diffuse", new Texture("bricks.jpg"));
+        material2.addFloat("specularIntensity", 1f);
+        material2.addFloat("specularPower", 8f);
 
         GameObject planeObject = new GameObject();
         planeObject.addComponent(new MeshRenderer(mesh, material));
@@ -81,6 +88,7 @@ public class TestGame extends Game
         GameObject testMesh = new GameObject().addComponent(new MeshRenderer(mesh2, material));
         GameObject testMesh2 = new GameObject().addComponent(new MeshRenderer(mesh2, material));
         GameObject tempMeshObject = new GameObject().addComponent(new MeshRenderer(tempMesh, material));
+        GameObject tempMesh2Object = new GameObject().addComponent(new MeshRenderer(tempMesh2, material2));
 
         testMesh.getTransform().getPos().set(0, 2, 0);
         testMesh2.getTransform().getPos().set(0, 0, 5);
@@ -92,8 +100,11 @@ public class TestGame extends Game
 
         addObject(testMesh);
         addObject(tempMeshObject);
+        addObject(tempMesh2Object);
         tempMeshObject.getTransform().setTranslation(5, 5, 5);
         tempMeshObject.getTransform().setRot(new Quaternion(new Vector3f(0, 1, 0), (float) Math.toRadians(-70.0f)));
+        tempMesh2Object.getTransform().setTranslation(5, 7, 5);
+        tempMesh2Object.getTransform().setRot(new Quaternion(new Vector3f(0, 1, 0), (float) Math.toRadians(-70.0f)));
 
         directionalLight.getTransform().setRot(new Quaternion(new Vector3f(1, 0, 0), (float) Math.toRadians(-45)));
     }
