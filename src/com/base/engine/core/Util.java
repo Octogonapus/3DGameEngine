@@ -3,6 +3,7 @@ package com.base.engine.core;
 import com.base.engine.rendering.Vertex;
 import org.lwjgl.BufferUtils;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -34,6 +35,17 @@ public class Util
 	{
 		return BufferUtils.createIntBuffer(size);
 	}
+
+    /**
+     * Create a byte buffer.
+     *
+     * @param size  The size of the byte buffer
+     * @return      The byte buffer
+     */
+    public static ByteBuffer createByteBuffer(int size)
+    {
+        return BufferUtils.createByteBuffer(size);
+    }
 
     /**
      * Create a flipped buffer.

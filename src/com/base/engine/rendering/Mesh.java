@@ -30,10 +30,13 @@ public class Mesh
         this.fileName = fileName;
         WeakReference<MeshResource> ref = loadedModels.get(fileName);
 
-        if (ref != null && ref.get() != null)
+        if (ref != null)
         {
             resource = ref.get();
-            resource.addReference();
+            if (resource != null)
+            {
+                resource.addReference();
+            }
         }
         else
         {
