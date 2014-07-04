@@ -10,104 +10,75 @@ import com.base.engine.rendering.*;
 
 public class TestGame extends Game
 {
-    private GameObject monkeyMeshObject;
+    Mesh planeMesh;
+    Mesh monkeyMesh;
+    Mesh monkeyMesh2;
+
+    Material testMaterial;
+    Material brickMaterial;
+
+    DirectionalLight directionalLight;
+    PointLight pointLight;
+
+    GameObject planeObject;
+    GameObject monkeyObject;
+    GameObject monkeyObject2;
+    GameObject directionalLightObject;
+    GameObject pointLightObject;
+
     private Camera camera;
-    private boolean doRotate = false;
+    private boolean doRotate;
 
     /**
      * Initializes this game, called when this game starts.
      */
     public void init()
     {
+        //Initialize components
+        directionalLight = new DirectionalLight(Shader.COLOR_WHITE, 0.4f);
+        pointLight = new PointLight(new Vector3f(0, 1, 0), 0.4f, new Attenuation(0, 0, 1));
+        camera = new Camera((float) Math.toRadians(70.0f), (float) Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f);
 
-        float fieldDepth = 10.0f;
-        float fieldWidth = 10.0f;
-        float fieldDepth2 = 1.0f;
-        float fieldWidth2 = 1.0f;
+        //Load meshes
+        planeMesh = new Mesh("plane.obj");
+        monkeyMesh = new Mesh("monkeySmooth.obj");
+        monkeyMesh2 = new Mesh("monkeySmooth.obj");
 
-        Vertex[] vertices = new Vertex[]{
-                new Vertex(new Vector3f(-fieldWidth, 0.0f, -fieldDepth), new Vector2f(0.0f, 0.0f)),
-                new Vertex(new Vector3f(-fieldWidth, 0.0f, fieldDepth * 3), new Vector2f(0.0f, 1.0f)),
-                new Vertex(new Vector3f(fieldWidth * 3, 0.0f, -fieldDepth), new Vector2f(1.0f, 0.0f)),
-                new Vertex(new Vector3f(fieldWidth * 3, 0.0f, fieldDepth * 3), new Vector2f(1.0f, 1.0f))
-        };
+        //Load and initialize materials
+        testMaterial = new Material();
+        testMaterial.addTexture("diffuse", new Texture("test.png"));
+        testMaterial.addFloat("specularIntensity", 1f);
+        testMaterial.addFloat("specularPower", 8f);
 
-        int indices[] = {
-                0, 1, 2,
-                2, 1, 3
-        };
+        brickMaterial = new Material();
+        brickMaterial.addTexture("diffuse", new Texture("bricks.jpg"));
+        brickMaterial.addFloat("specularIntensity", 1f);
+        brickMaterial.addFloat("specularPower", 8f);
 
-        Vertex[] vertices2 = new Vertex[]{
-                new Vertex(new Vector3f(-fieldWidth2, 0.0f, -fieldDepth2), new Vector2f(0.0f, 0.0f)),
-                new Vertex(new Vector3f(-fieldWidth2, 0.0f, fieldDepth2 * 3), new Vector2f(0.0f, 1.0f)),
-                new Vertex(new Vector3f(fieldWidth2 * 3, 0.0f, -fieldDepth2), new Vector2f(1.0f, 0.0f)),
-                new Vertex(new Vector3f(fieldWidth2 * 3, 0.0f, fieldDepth2 * 3), new Vector2f(1.0f, 1.0f))
-        };
+        //Initialize objects
+        planeObject = new GameObject().addComponent(new MeshRenderer(planeMesh, testMaterial));
+        monkeyObject = new GameObject().addComponent(new MeshRenderer(monkeyMesh, testMaterial));
+        monkeyObject2 = new GameObject().addComponent(new MeshRenderer(monkeyMesh2, brickMaterial));
+        directionalLightObject = new GameObject().addComponent(directionalLight);
+        pointLightObject = new GameObject().addComponent(pointLight);
 
-        int indices2[] = {
-                0, 1, 2,
-                2, 1, 3
-        };
+        //Add children and components
+        monkeyObject.addChild(monkeyObject2);
 
-        Mesh mesh = new Mesh(vertices, indices, true);
-        Mesh mesh2 = new Mesh(vertices2, indices2, true);
-        Mesh monkeyMesh = new Mesh("monkeySmooth.obj");
-        Mesh monkeyMesh2 = new Mesh("monkeySmooth.obj");
+        //Transform objects and components
+        planeObject.getTransform().setScale(20);
+        planeObject.getTransform().setTranslation(0, -5, 0);
+        monkeyObject.getTransform().setTranslation(0, 2, 0);
+        monkeyObject2.getTransform().setTranslation(3, 0, 0);
+        directionalLightObject.getTransform().setRot(new Quaternion(new Vector3f(1, 0, 0), (float) Math.toRadians(-45)));
+        pointLightObject.getTransform().setTranslation(0, 5, 0);
 
-        Material material = new Material();
-        material.addTexture("diffuse", new Texture("test.png"));
-        material.addFloat("specularIntensity", 1f);
-        material.addFloat("specularPower", 8f);
-
-        Material material2 = new Material();
-        material2.addTexture("diffuse", new Texture("bricks.jpg"));
-        material2.addFloat("specularIntensity", 1f);
-        material2.addFloat("specularPower", 8f);
-
-        GameObject planeObject = new GameObject();
-        planeObject.addComponent(new MeshRenderer(mesh, material));
-        planeObject.getTransform().getPos().set(0, -1, 5);
-
-        GameObject directionalLightObject = new GameObject();
-        DirectionalLight directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), 0.4f);
-        directionalLightObject.addComponent(directionalLight);
-
-        GameObject pointLightObject = new GameObject();
-        PointLight pointLight = new PointLight(new Vector3f(0, 1, 0), 0.4f, new Vector3f(0, 0, 1));
-        pointLightObject.addComponent(pointLight);
-
-        GameObject spotLightObject = new GameObject();
-        SpotLight spotLight = new SpotLight(new Vector3f(0, 1, 1), 0.4f, new Vector3f(0, 0, 0.1f), 0.7f);
-        spotLightObject.getTransform().getPos().set(5, 0, 5);
-        spotLightObject.getTransform().setRot(new Quaternion(new Vector3f(0, 1, 0), (float) Math.toRadians(90.0f)));
-        spotLightObject.addComponent(spotLight);
-
+        //Add objects
+        addObject(new GameObject().addComponent(camera).addComponent(new FreeMove(10f)).addComponent(new FreeLook(0.5f)));
         addObject(planeObject);
+        addObject(monkeyObject);
         addObject(directionalLightObject);
         addObject(pointLightObject);
-        addObject(spotLightObject);
-
-        camera = new Camera((float) Math.toRadians(70.0f), (float) 400 / (float) 300, 0.01f, 1000.0f);
-        planeObject.addChild(new GameObject().addComponent(camera));
-
-        GameObject testMesh = new GameObject().addComponent(new MeshRenderer(mesh2, material));
-        GameObject testMesh2 = new GameObject().addComponent(new MeshRenderer(mesh2, material));
-        monkeyMeshObject = new GameObject().addComponent(new MeshRenderer(monkeyMesh, material));
-        GameObject monkeyMesh2Object = new GameObject().addComponent(new MeshRenderer(monkeyMesh2, material2));
-        monkeyMeshObject.addChild(monkeyMesh2Object);
-
-        addObject(testMesh);
-        addObject(monkeyMeshObject);
-        monkeyMeshObject.getTransform().setTranslation(5, 5, 5);
-        monkeyMeshObject.getTransform().setRot(new Quaternion(new Vector3f(0, 1, 0), (float) Math.toRadians(-70.0f)));
-        monkeyMesh2Object.getTransform().setTranslation(0, 2, 0);
-
-        testMesh.getTransform().getPos().set(0, 2, 0);
-        testMesh2.getTransform().getPos().set(0, 0, 5);
-        testMesh.addChild(testMesh2);
-        testMesh.getTransform().setRot(new Quaternion(new Vector3f(0, 1, 0), 0.4f));
-
-        directionalLight.getTransform().setRot(new Quaternion(new Vector3f(1, 0, 0), (float) Math.toRadians(-45)));
     }
 
     @Override
@@ -125,7 +96,7 @@ public class TestGame extends Game
 
         if (doRotate)
         {
-            monkeyMeshObject.getTransform().setRot(camera.getTransform().getRot());
+            monkeyObject.getTransform().setRot(camera.getTransform().getRot());
         }
     }
 }

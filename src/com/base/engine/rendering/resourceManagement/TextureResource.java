@@ -1,5 +1,6 @@
 package com.base.engine.rendering.resourceManagement;
 
+import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 
 /**
@@ -11,9 +12,9 @@ public class TextureResource
     private int id;
     private int refCount;
 
-    public TextureResource(int id)
+    public TextureResource()
     {
-        this.id = id;
+        this.id = glGenTextures();
         refCount = 1;
     }
 

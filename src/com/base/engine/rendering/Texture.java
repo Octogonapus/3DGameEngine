@@ -38,7 +38,7 @@ public class Texture
         }
         else
         {
-            resource = new TextureResource(loadTexture(fileName));
+            resource = loadTexture(fileName);
             loadedTextures.put(fileName, new WeakReference<TextureResource>(resource));
         }
     }
@@ -66,9 +66,9 @@ public class Texture
      * Load a texture by file name.
      *
      * @param fileName  The name of the texture
-     * @return          The id of the loaded texture
+     * @return          A resource for the loaded texture
      */
-    private static int loadTexture(String fileName)
+    private static TextureResource loadTexture(String fileName)
     {
         //String[] splitArray = fileName.split("\\.");
         //String ext = splitArray[splitArray.length - 1];
@@ -103,8 +103,8 @@ public class Texture
             }
             buffer.flip();
 
-            int id = glGenTextures();
-            glBindTexture(GL_TEXTURE_2D, id);
+            TextureResource resource = new TextureResource();
+            glBindTexture(GL_TEXTURE_2D, resource.getId());
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -114,7 +114,7 @@ public class Texture
 
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 
-            return id;
+            return resource;
         }
         catch(Exception e)
         {
@@ -122,7 +122,7 @@ public class Texture
             System.exit(1);
         }
 
-        return 0;
+        return null;
     }
 
     @Override

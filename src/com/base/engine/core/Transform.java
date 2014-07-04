@@ -35,6 +35,9 @@ public class Transform
 		return getParentMatrix().mul(translationMatrix.mul(rotationMatrix.mul(scaleMatrix)));
 	}
 
+    /**
+     * Update this transform.
+     */
     public void update()
     {
         if (oldPos != null)
@@ -52,7 +55,7 @@ public class Transform
     }
 
     /**
-     * Rotate this transform an angle along an axis.
+     * Rotates this transform an angle along an axis (adds to current rotation).
      *
      * @param axis  The axis to rotate on
      * @param angle The angle to rotate
@@ -60,6 +63,29 @@ public class Transform
     public void rotate(Vector3f axis, float angle)
     {
         rot = new Quaternion(axis, angle).mul(rot).normalized();
+    }
+
+    /**
+     * Rotates this transform to face a point.
+     *
+     * @param point The point to face
+     * @param up    The up direction
+     */
+    public void lookAt(Vector3f point, Vector3f up)
+    {
+        rot = new Quaternion(new Matrix4f().initRotation(point.sub(pos).normalized(), up));
+    }
+
+    /**
+     * Gets a quaternion facing a point.
+     *
+     * @param point The point to face
+     * @param up    The up direction
+     * @return      A quaternion facing the point
+     */
+    public Quaternion getLookAtDirection(Vector3f point, Vector3f up)
+    {
+        return new Quaternion(new Matrix4f().initRotation(point.sub(pos).normalized(), up));
     }
 
     public boolean hasChanged()
@@ -134,6 +160,11 @@ public class Transform
 	{
 		this.scale = scale;
 	}
+
+    public void setScale(float scale)
+    {
+        setScale(scale, scale, scale);
+    }
 	
 	public void setScale(float x, float y, float z)
 	{

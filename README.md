@@ -36,9 +36,23 @@ All rendering is done using a scene graph. The scene graph contains game objects
         - Game Component
         - Game Component
 
->A game object will inherit its parent's translation, rotation, and scale. It will not inherit its parent's material.
+A game object will inherit its parent's translation, rotation, and scale. It will not inherit its parent's material.
 
 Full JavaDocs can be found in the folder named "docs".
+
+Creating the scene graph should be done as follows:
+
+- Initialize components
+- Load meshes
+- Load and initialize materials
+- Initialize objects
+- Add children and components
+- Transform objects and components
+- Add objects
+
+Methods should be overridden to provide functionality other than the default. Overridden methods must call super, with the appropriate parameter, on their first line.
+
+An example of this can be found in the file "com.base.game.TestGame"
 
 Libraries Used
 -----------

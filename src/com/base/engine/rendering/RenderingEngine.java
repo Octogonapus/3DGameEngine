@@ -3,6 +3,7 @@ package com.base.engine.rendering;
 import com.base.engine.components.BaseLight;
 import com.base.engine.components.Camera;
 import com.base.engine.core.GameObject;
+import com.base.engine.core.Transform;
 import com.base.engine.core.Vector3f;
 import com.base.engine.rendering.resourceManagement.MappedValues;
 
@@ -19,10 +20,10 @@ import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 public class RenderingEngine extends MappedValues
 {
     private Camera mainCamera;
-    private Vector3f ambientLight;
 
     private ArrayList<BaseLight> lights;
     private BaseLight activeLight;
+    private Shader forwardAmbient;
 
     private HashMap<String, Integer> samplerMap;
 
@@ -35,6 +36,8 @@ public class RenderingEngine extends MappedValues
 
         samplerMap.put("diffuse", 0);
 
+        forwardAmbient = new Shader("forward-ambient");
+
         addVector3f("ambient", new Vector3f(0.1f, 0.1f, 0.1f));
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -44,12 +47,20 @@ public class RenderingEngine extends MappedValues
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_DEPTH_CLAMP);
         glEnable(GL_TEXTURE_2D);
+    }
 
-//        mainCamera = new Camera((float) Math.toRadians(70.0f), (float) Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f);
-//        ambientLight = new Vector3f(0.1f, 0.1f, 0.1f);
-//        activeDirectionalLight = new DirectionalLight(new BaseLight(new Vector3f(0, 0, 1), 0.4f), new Vector3f(1, 1, 1));
-//        activePointLight = new PointLight(new BaseLight(new Vector3f(0, 1, 0), 0.4f), new Attenuation(0, 0, 1), new Vector3f(5, 0, 5), 100);
-//        spotLight = new SpotLight(new PointLight(new BaseLight(new Vector3f(0, 1, 1), 0.4f), new Attenuation(0, 0, 0.1f), new Vector3f(5, 0, 5), 100), new Vector3f(1, 0, 0), 0.7f);
+    /**
+     * Update a uniform struct that is not handled in Shader by default.
+     *
+     * @param transform     The transform
+     * @param material      The material
+     * @param shader        The shader for the uniform
+     * @param uniformName   The name of the uniform
+     * @param uniformType   The type of the uniform
+     */
+    public void updateUniformStruct(Transform transform, Material material, Shader shader, String uniformName, String uniformType)
+    {
+        throw new IllegalArgumentException(uniformType + " is not a supported type in Rendering Engine");
     }
 
     /**
@@ -61,12 +72,7 @@ public class RenderingEngine extends MappedValues
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        lights.clear();
-        object.addToRenderingEngine(this);
-
-        Shader forwardAmbient = ForwardAmbient.getInstance();
-
-        object.render(forwardAmbient, this);
+        object.renderAll(forwardAmbient, this);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
@@ -76,7 +82,7 @@ public class RenderingEngine extends MappedValues
             for (BaseLight light : lights)
             {
                 activeLight = light;
-                object.render(light.getShader(), this);
+                object.renderAll(light.getShader(), this);
             }
         }
         glDepthFunc(GL_LESS);

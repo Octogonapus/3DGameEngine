@@ -17,13 +17,13 @@ public abstract class Game
     public void init() {}
 
     /**
-     * Handle input.
+     * Handle inputAll.
      *
      * @param delta Delta time
      */
     public void input(float delta)
     {
-        getRootObject().input(delta);
+        getRootObject().inputAll(delta);
     }
 
     /**
@@ -33,7 +33,7 @@ public abstract class Game
      */
     public void update(float delta)
     {
-        getRootObject().update(delta);
+        getRootObject().updateAll(delta);
     }
 
     /**
@@ -64,5 +64,10 @@ public abstract class Game
         }
 
         return root;
+    }
+
+    public void setEngine(CoreEngine engine)
+    {
+        getRootObject().setEngine(engine);
     }
 }

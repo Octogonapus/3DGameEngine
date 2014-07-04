@@ -3,3 +3,4 @@ com.base.engine.core
 com.base.engine.rendering
 com.base.engine.rendering.meshLoading
 com.base.engine.rendering.resourceManagement
+com.base.game
