@@ -13,6 +13,12 @@ import com.base.engine.rendering.Shader;
 public class LookAt extends GameComponent
 {
     private RenderingEngine renderingEngine;
+    private float scale;
+
+    public LookAt(float scale)
+    {
+        this.scale = scale;
+    }
 
     @Override
     public void update(float delta)
@@ -20,7 +26,7 @@ public class LookAt extends GameComponent
         if (renderingEngine != null)
         {
             Quaternion newRot = getTransform().getLookAtDirection(renderingEngine.getMainCamera().getTransform().getTransformedPos(), new Vector3f(0, 1, 0));
-            getTransform().setRot(getTransform().getRot().slerp(newRot, delta * 5.0f, true));
+            getTransform().setRot(getTransform().getRot().slerp(newRot, delta * scale, true));
         }
     }
 

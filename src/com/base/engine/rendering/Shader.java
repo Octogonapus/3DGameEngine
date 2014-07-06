@@ -25,7 +25,6 @@ import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 public class Shader
 {
-    public static Vector3f COLOR_WHITE = new Vector3f(1, 1, 1), COLOR_BLACK = new Vector3f(0, 0, 0);
     public static Vector3f LIGHT_AMBIENT = new Vector3f(0.1f, 0.1f, 0.1f);
 
     private static HashMap<String, WeakReference<ShaderResource>> loadedShaders = new HashMap<String, WeakReference<ShaderResource>>(0);
