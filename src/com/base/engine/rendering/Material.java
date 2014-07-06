@@ -20,6 +20,7 @@ public class Material extends MappedValues
         super();
 
         textureHashMap = new HashMap<String, Texture>(0);
+        textureHashMap.put("normalMap", new Texture("default_normal.jpg"));
         vector3fHashMap = new HashMap<String, Vector3f>(0);
         floatHashMap = new HashMap<String, Float>(0);
     }

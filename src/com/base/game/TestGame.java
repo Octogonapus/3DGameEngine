@@ -34,7 +34,7 @@ public class TestGame extends Game
         directionalLight = new DirectionalLight(Color.COLOR_WHITE, 0.4f);
 
         //Load meshes
-        planeMesh = new Mesh("plane.obj");
+        planeMesh = new Mesh("plane3.obj");
 
         //Load and initialize materials
         testMaterial = new Material();
@@ -49,6 +49,7 @@ public class TestGame extends Game
 
         brick2Material = new Material();
         brick2Material.addTexture("diffuse", new Texture("bricks2.jpg"));
+        brick2Material.addTexture("normalMap", new Texture("bricks2_normal.png"));
         brick2Material.addFloat("specularIntensity", 1f);
         brick2Material.addFloat("specularPower", 8f);
 
@@ -61,7 +62,6 @@ public class TestGame extends Game
 
         //Transform objects and components
         cameraObject.getTransform().setTranslation(0, 1, -6);
-        planeObject.getTransform().setScale(20);
         planeObject.getTransform().setTranslation(0, -5, 0);
         directionalLightObject.getTransform().setRot(new Quaternion(new Vector3f(1, 0, 0), (float) Math.toRadians(-45)));
 

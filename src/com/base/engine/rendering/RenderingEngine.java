@@ -35,6 +35,7 @@ public class RenderingEngine extends MappedValues
         samplerMap = new HashMap<String, Integer>(0);
 
         samplerMap.put("diffuse", 0);
+        samplerMap.put("normalMap", 1);
 
         forwardAmbient = new Shader("forward-ambient");
 
