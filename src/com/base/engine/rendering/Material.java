@@ -15,14 +15,28 @@ public class Material extends MappedValues
     private HashMap<String, Vector3f> vector3fHashMap;
     private HashMap<String, Float> floatHashMap;
 
-    public Material()
+    public Material(Texture diffuse)
+    {
+        this(diffuse, 0.5f, 4f, new Texture("default_normal.jpg"), new Texture("default_disp.png"), 0.0f, 0.0f);
+    }
+
+    public Material(Texture diffuse, float specularIntesnity, float specularPower, Texture normalMap, Texture dispMap, float dispMapScale, float dispMapOffset)
     {
         super();
 
         textureHashMap = new HashMap<String, Texture>(0);
-        textureHashMap.put("normalMap", new Texture("default_normal.jpg"));
+        textureHashMap.put("diffuse", diffuse);
+        textureHashMap.put("normalMap", normalMap);
+        textureHashMap.put("dispMap", dispMap);
+
         vector3fHashMap = new HashMap<String, Vector3f>(0);
+
         floatHashMap = new HashMap<String, Float>(0);
+        floatHashMap.put("specularIntensity", specularIntesnity);
+        floatHashMap.put("specularPower", specularPower);
+        floatHashMap.put("dispMapScale", dispMapScale);
+        float baseBias = dispMapScale / 2.0f;
+        floatHashMap.put("dispMapBias", -baseBias + baseBias * dispMapOffset);
     }
 
     public void addTexture(String name, Texture texture)

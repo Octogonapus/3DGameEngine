@@ -11,6 +11,7 @@ import com.base.engine.rendering.*;
 public class TestGame extends Game
 {
     private Mesh planeMesh;
+    private Mesh tinyPlaneMesh;
 
     private Material testMaterial;
     private Material brickMaterial;
@@ -22,6 +23,7 @@ public class TestGame extends Game
     private GameObject cameraObject;
     private GameObject planeObject;
     private GameObject directionalLightObject;
+    private GameObject tinyPlaneObject;
 
     /**
      * Initializes this game, called when this game starts.
@@ -35,28 +37,20 @@ public class TestGame extends Game
 
         //Load meshes
         planeMesh = new Mesh("plane3.obj");
+        tinyPlaneMesh = new Mesh("plane3.obj");
 
         //Load and initialize materials
-        testMaterial = new Material();
-        testMaterial.addTexture("diffuse", new Texture("test.png"));
-        testMaterial.addFloat("specularIntensity", 1f);
-        testMaterial.addFloat("specularPower", 8f);
+        testMaterial = new Material(new Texture("test.png"));
 
-        brickMaterial = new Material();
-        brickMaterial.addTexture("diffuse", new Texture("bricks.jpg"));
-        brickMaterial.addFloat("specularIntensity", 1f);
-        brickMaterial.addFloat("specularPower", 8f);
+        brickMaterial = new Material(new Texture("bricks.jpg"), 0.5f, 4f, new Texture("bricks_normal.jpg"), new Texture("bricks_disp.png"), 0.03f, -0.5f);
 
-        brick2Material = new Material();
-        brick2Material.addTexture("diffuse", new Texture("bricks2.jpg"));
-        brick2Material.addTexture("normalMap", new Texture("bricks2_normal.png"));
-        brick2Material.addFloat("specularIntensity", 1f);
-        brick2Material.addFloat("specularPower", 8f);
+        brick2Material = new Material(new Texture("bricks2.jpg"), 0.5f, 4f, new Texture("bricks2_normal.jpg"), new Texture("bricks2_disp.jpg"), 0.04f, -1.0f);
 
         //Initialize objects
-        cameraObject = new GameObject().addComponent(camera).addComponent(new FreeLook(0.5f)).addComponent(new FreeMove(20));
-        planeObject = new GameObject().addComponent(new MeshRenderer(planeMesh, brick2Material));
+        cameraObject = new GameObject().addComponent(camera).addComponent(new FreeLook(0.5f)).addComponent(new FreeMove(20f));
+        planeObject = new GameObject().addComponent(new MeshRenderer(planeMesh, brickMaterial));
         directionalLightObject = new GameObject().addComponent(directionalLight);
+        tinyPlaneObject = new GameObject().addComponent(new MeshRenderer(tinyPlaneMesh, brick2Material));
 
         //Add children and components
 
@@ -64,10 +58,12 @@ public class TestGame extends Game
         cameraObject.getTransform().setTranslation(0, 1, -6);
         planeObject.getTransform().setTranslation(0, -5, 0);
         directionalLightObject.getTransform().setRot(new Quaternion(new Vector3f(1, 0, 0), (float) Math.toRadians(-45)));
+//        tinyPlaneObject.getTransform().setScale(0.2f);
 
         //Add objects
         addObject(cameraObject);
         addObject(planeObject);
         addObject(directionalLightObject);
+        addObject(tinyPlaneObject);
     }
 }
